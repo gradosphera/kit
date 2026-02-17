@@ -41,6 +41,16 @@
         "types": "./dist/swap/omniston/index.d.ts",
         "default": "./dist/swap/omniston/index.cjs"
       }
+    },
+    "./swap/dedust": {
+      "import": {
+        "types": "./dist/swap/dedust/index.d.ts",
+        "default": "./dist/swap/dedust/index.js"
+      },
+      "require": {
+        "types": "./dist/swap/dedust/index.d.ts",
+        "default": "./dist/swap/dedust/index.cjs"
+      }
     }
   },
   "typesVersions": {
@@ -53,6 +63,9 @@
       ],
       "swap/omniston": [
         "./dist/swap/omniston/index.d.ts"
+      ],
+      "swap/dedust": [
+        "./dist/swap/dedust/index.d.ts"
       ]
     }
   },
@@ -77,6 +90,12 @@
       "optional": true
     },
     "@ston-fi/omniston-sdk": {
+      "optional": true
+    },
+    "@dedust/sdk": {
+      "optional": true
+    },
+    "@ton/ton": {
       "optional": true
     },
     "@tanstack/query-core": {
