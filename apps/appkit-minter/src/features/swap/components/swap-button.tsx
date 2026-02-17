@@ -13,17 +13,24 @@ import { Transaction, useSwapQuote, useNetwork, useAddress, useBuildSwapTransact
 
 export const USDT_ADDRESS = 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs';
 
-export const SwapButton: FC = () => {
+interface SwapButtonProps {
+    amount: string;
+    direction: 'from' | 'to';
+}
+
+export const SwapButton: FC<SwapButtonProps> = ({ amount, direction }) => {
     const network = useNetwork();
     const address = useAddress();
+    const decimals = direction === 'from' ? 9 : 6;
+    const reverseDecimals = direction === 'from' ? 6 : 9;
     const {
         data: quote,
         isError,
         isLoading,
     } = useSwapQuote({
-        amount: parseUnits('1', 9).toString(),
-        fromToken: { type: 'ton' },
-        toToken: { type: 'jetton', value: USDT_ADDRESS },
+        amount: parseUnits(amount, decimals).toString(),
+        fromToken: direction === 'from' ? { type: 'ton' } : { type: 'jetton', value: USDT_ADDRESS },
+        toToken: direction === 'to' ? { type: 'ton' } : { type: 'jetton', value: USDT_ADDRESS },
         network,
         slippageBps: 100,
     });
@@ -50,7 +57,7 @@ export const SwapButton: FC = () => {
             return 'Swap Unavailable';
         }
 
-        return `Swap ${formatUnits(quote.fromAmount, 9)} TON -> ${formatUnits(quote.toAmount, 6)} USDT`;
+        return `Swap ${formatUnits(quote.fromAmount, decimals)} ${direction === 'from' ? 'TON' : 'USDT'} -> ${formatUnits(quote.toAmount, reverseDecimals)} ${direction === 'to' ? 'TON' : 'USDT'}`;
     }, [isLoading, isError, quote]);
 
     return (
