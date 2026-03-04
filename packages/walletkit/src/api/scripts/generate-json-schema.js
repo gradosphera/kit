@@ -1312,24 +1312,16 @@ function processDiscriminatorMemberTypes(cases, discriminatorField, definitions)
  */
 function postProcessDiscriminatedUnions(schema) {
     const definitions = schema.definitions || {};
-    const syntheticTypes = {};
 
-    for (const [typeName, typeDef] of Object.entries(definitions)) {
+    for (const typeDef of Object.values(definitions)) {
         // Case A: Top-level discriminated union
         const topLevel = detectDiscriminatedUnion(typeDef);
         if (topLevel) {
-            const unionSchema = buildInterfaceUnionSchema(
-                topLevel.discriminatorField,
-                topLevel.cases,
-            );
+            const unionSchema = buildInterfaceUnionSchema(topLevel.discriminatorField, topLevel.cases);
             // Replace definition in-place
             Object.keys(typeDef).forEach((k) => delete typeDef[k]);
             Object.assign(typeDef, unionSchema);
-            processDiscriminatorMemberTypes(
-                topLevel.cases,
-                topLevel.discriminatorField,
-                definitions,
-            );
+            processDiscriminatorMemberTypes(topLevel.cases, topLevel.discriminatorField, definitions);
             continue;
         }
 
@@ -1364,11 +1356,7 @@ function postProcessDiscriminatedUnions(schema) {
             propDef.type = 'object';
             propDef['x-interface-union'] = true;
 
-            processDiscriminatorMemberTypes(
-                inlineUnion.cases,
-                inlineUnion.discriminatorField,
-                definitions,
-            );
+            processDiscriminatorMemberTypes(inlineUnion.cases, inlineUnion.discriminatorField, definitions);
         }
     }
 }
@@ -1388,11 +1376,7 @@ function postProcessConstantFields(schema) {
             let constantValue = null;
             if (propDef.const !== undefined) {
                 constantValue = String(propDef.const);
-            } else if (
-                propDef.enum &&
-                Array.isArray(propDef.enum) &&
-                propDef.enum.length === 1
-            ) {
+            } else if (propDef.enum && Array.isArray(propDef.enum) && propDef.enum.length === 1) {
                 constantValue = String(propDef.enum[0]);
             }
             if (constantValue === null) continue;
