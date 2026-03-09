@@ -12,7 +12,7 @@ For detailed information about DeDust Router, see the [official documentation](h
 
 %%demo/examples/src/appkit/swap#DEDUST_QUICK_START%%
 
-## Configuration Options
+## Configuration
 
 ```typescript
 interface DeDustSwapProviderConfig {
@@ -20,41 +20,25 @@ interface DeDustSwapProviderConfig {
     apiUrl?: string;              // Default: 'https://api-mainnet.dedust.io'
     defaultSlippageBps?: number;  // Default: 100 (1%)
     referralAddress?: string;     // Optional referral address
-    referralFeeBps?: number;      // Referral fee in bps (max 100 = 1%)
-    onlyVerifiedPools?: boolean;  // Default: true
-    maxSplits?: number;           // Default: 4
-    maxLength?: number;            // Default: 3 (max route hops)
-    minPoolUsdTvl?: string;       // Default: '5000'
-}
-
-interface SwapQuoteParams {
-    from: SwapToken;
-    to: SwapToken;
-    amount: string;
-    network: Network;
-    slippageBps?: number;
-    isReverseSwap?: boolean;
-    providerOptions?: DeDustProviderOptions;
+    referralFeeBps?: number;     // Referral fee in bps (max 100 = 1%)
+    onlyVerifiedPools?: boolean; // Default: true
+    maxSplits?: number;          // Default: 4
+    maxLength?: number;          // Default: 3 (max route hops)
+    minPoolUsdTvl?: string;      // Default: '5000'
 }
 ```
 
-**Note:** DeDust Router only supports mainnet. Requests on other networks will fail.
+**Note:** DeDust Router only supports mainnet. See [Swap README](../README.md) for base parameters.
 
 ## Protocol Routing
-
-DeDust routes across multiple protocols. You can customize which protocols to use:
 
 %%demo/examples/src/appkit/swap#DEDUST_PROTOCOL_ROUTING%%
 
 ## Referral Fees
 
-Pass referral options via `providerOptions` to earn fees on swaps:
-
 %%demo/examples/src/appkit/swap#DEDUST_REFERRAL_FEES%%
 
 ### Overriding Referral Settings
-
-You can set a global referrer in provider config and override it for specific requests:
 
 %%demo/examples/src/appkit/swap#DEDUST_OVERRIDING_REFERRAL%%
 

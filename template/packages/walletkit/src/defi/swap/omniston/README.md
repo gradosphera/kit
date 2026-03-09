@@ -12,7 +12,7 @@ For detailed information about Omniston features and capabilities, see the [offi
 
 %%demo/examples/src/appkit/swap#OMNISTON_QUICK_START%%
 
-## Configuration Options
+## Configuration
 
 ```typescript
 interface OmnistonSwapProviderConfig {
@@ -23,19 +23,9 @@ interface OmnistonSwapProviderConfig {
     referrerFeeBps?: number;      // Referrer fee in bps
     flexibleReferrerFee?: boolean; // Default: false
 }
-
-interface SwapQuoteParams {
-    from: SwapToken;
-    to: SwapToken;
-    amount: string;
-    network: Network;
-    slippageBps?: number;
-    maxOutgoingMessages?: number; // Max messages per tx (default: 1 if not specified)
-    providerOptions?: OmnistonProviderOptions;
-}
 ```
 
-**Important:** The `maxOutgoingMessages` parameter should be extracted from the wallet's features using `getMaxOutgoingMessages()` utility. If not provided, it defaults to `1`, which may limit swap route optimization.
+**Omniston-specific quote options:** `maxOutgoingMessages` (max messages per tx; default 1). Extract from wallet features via `getMaxOutgoingMessages()`. See [Swap README](../README.md) for base parameters.
 
 ### Usage Example
 
@@ -43,13 +33,9 @@ interface SwapQuoteParams {
 
 ## Referral Fees
 
-Pass referral options via `providerOptions` to earn fees on swaps:
-
 %%demo/examples/src/appkit/swap#OMNISTON_REFERRAL_FEES%%
 
 ### Overriding Referral Settings
-
-You can set a global referrer in provider config and override it for specific requests:
 
 %%demo/examples/src/appkit/swap#OMNISTON_OVERRIDING_REFERRAL%%
 

@@ -21,7 +21,7 @@ const provider = new DeDustSwapProvider({
 kit.registerProvider(provider);
 ```
 
-## Configuration Options
+## Configuration
 
 ```typescript
 interface DeDustSwapProviderConfig {
@@ -29,29 +29,17 @@ interface DeDustSwapProviderConfig {
     apiUrl?: string;              // Default: 'https://api-mainnet.dedust.io'
     defaultSlippageBps?: number;  // Default: 100 (1%)
     referralAddress?: string;     // Optional referral address
-    referralFeeBps?: number;      // Referral fee in bps (max 100 = 1%)
-    onlyVerifiedPools?: boolean;  // Default: true
-    maxSplits?: number;           // Default: 4
-    maxLength?: number;            // Default: 3 (max route hops)
-    minPoolUsdTvl?: string;       // Default: '5000'
-}
-
-interface SwapQuoteParams {
-    from: SwapToken;
-    to: SwapToken;
-    amount: string;
-    network: Network;
-    slippageBps?: number;
-    isReverseSwap?: boolean;
-    providerOptions?: DeDustProviderOptions;
+    referralFeeBps?: number;     // Referral fee in bps (max 100 = 1%)
+    onlyVerifiedPools?: boolean; // Default: true
+    maxSplits?: number;          // Default: 4
+    maxLength?: number;          // Default: 3 (max route hops)
+    minPoolUsdTvl?: string;      // Default: '5000'
 }
 ```
 
-**Note:** DeDust Router only supports mainnet. Requests on other networks will fail.
+**Note:** DeDust Router only supports mainnet. See [Swap README](../README.md) for base parameters.
 
 ## Protocol Routing
-
-DeDust routes across multiple protocols. You can customize which protocols to use:
 
 ```ts
 const TON = { address: 'ton', decimals: 9 };
@@ -78,8 +66,6 @@ const quote = await getSwapQuote(appKit, {
 
 ## Referral Fees
 
-Pass referral options via `providerOptions` to earn fees on swaps:
-
 ```ts
 const TON = { address: 'ton', decimals: 9 };
 const USDT = {
@@ -100,8 +86,6 @@ const quote = await getSwapQuote(appKit, {
 ```
 
 ### Overriding Referral Settings
-
-You can set a global referrer in provider config and override it for specific requests:
 
 ```ts
 const TON = { address: 'ton', decimals: 9 };

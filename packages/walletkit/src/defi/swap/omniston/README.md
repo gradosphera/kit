@@ -20,7 +20,7 @@ const provider = new OmnistonSwapProvider({
 kit.registerProvider(provider);
 ```
 
-## Configuration Options
+## Configuration
 
 ```typescript
 interface OmnistonSwapProviderConfig {
@@ -31,19 +31,9 @@ interface OmnistonSwapProviderConfig {
     referrerFeeBps?: number;      // Referrer fee in bps
     flexibleReferrerFee?: boolean; // Default: false
 }
-
-interface SwapQuoteParams {
-    from: SwapToken;
-    to: SwapToken;
-    amount: string;
-    network: Network;
-    slippageBps?: number;
-    maxOutgoingMessages?: number; // Max messages per tx (default: 1 if not specified)
-    providerOptions?: OmnistonProviderOptions;
-}
 ```
 
-**Important:** The `maxOutgoingMessages` parameter should be extracted from the wallet's features using `getMaxOutgoingMessages()` utility. If not provided, it defaults to `1`, which may limit swap route optimization.
+**Omniston-specific quote options:** `maxOutgoingMessages` (max messages per tx; default 1). Extract from wallet features via `getMaxOutgoingMessages()`. See [Swap README](../README.md) for base parameters.
 
 ### Usage Example
 
@@ -65,8 +55,6 @@ const quote = await getSwapQuote(appKit, {
 
 ## Referral Fees
 
-Pass referral options via `providerOptions` to earn fees on swaps:
-
 ```ts
 const TON = { address: 'ton', decimals: 9 };
 const USDT = {
@@ -87,8 +75,6 @@ const quote = await getSwapQuote(appKit, {
 ```
 
 ### Overriding Referral Settings
-
-You can set a global referrer in provider config and override it for specific requests:
 
 ```ts
 const TON = { address: 'ton', decimals: 9 };
