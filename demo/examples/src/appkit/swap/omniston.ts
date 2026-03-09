@@ -7,11 +7,12 @@
  */
 
 import { AppKit, Network, registerProvider } from '@ton/appkit';
+import { DeDustSwapProvider } from '@ton/appkit/swap/dedust';
 import { OmnistonSwapProvider } from '@ton/appkit/swap/omniston';
 
 export const swapProviderInitExample = async () => {
     // SAMPLE_START: SWAP_PROVIDER_INIT
-    // Initialize AppKit with swap provider
+    // Initialize AppKit with swap providers
     const appKit = new AppKit({
         networks: {
             [Network.mainnet().chainId]: {
@@ -23,9 +24,12 @@ export const swapProviderInitExample = async () => {
         },
         providers: [
             new OmnistonSwapProvider({
-                // Optional configuration
                 apiUrl: 'https://api.ston.fi',
                 defaultSlippageBps: 100, // 1%
+            }),
+            new DeDustSwapProvider({
+                defaultSlippageBps: 100,
+                referralAddress: 'EQ...', // Optional
             }),
         ],
     });
@@ -48,13 +52,9 @@ export const swapProviderRegisterExample = async () => {
         },
     });
 
-    // 2. Register swap provider
-    const provider = new OmnistonSwapProvider({
-        // Optional configuration
-        apiUrl: 'https://api.ston.fi',
-    });
-
-    registerProvider(appKit, provider);
+    // 2. Register swap providers
+    registerProvider(appKit, new OmnistonSwapProvider({ defaultSlippageBps: 100 }));
+    registerProvider(appKit, new DeDustSwapProvider({ defaultSlippageBps: 100 }));
     // SAMPLE_END: SWAP_PROVIDER_REGISTER
 
     return appKit;

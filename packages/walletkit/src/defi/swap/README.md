@@ -176,7 +176,7 @@ const quote = await kit.swap.getQuote(
 ## Available Providers
 
 - **[Omniston](./omniston/README.md)**: STON.fi aggregator supporting multiple DEXs
-- More providers coming soon...
+- **[DeDust](./dedust/README.md)**: DeDust Router v2 aggregator supporting multiple pools and protocols
 
 ## API Reference
 
@@ -221,4 +221,4 @@ Set default provider for swap operations.
 
 ## Examples
 
-See the [demo wallet](../../../apps/demo-wallet/src/pages/Swap.tsx) for a complete implementation example.
+See the [demo wallet](https://github.com/ton-connect/kit/blob/main/apps/demo-wallet/src/pages/Swap.tsx) for a complete implementation example.
