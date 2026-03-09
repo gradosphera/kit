@@ -37,7 +37,7 @@ const DEFAULT_API_URL = 'https://api-mainnet.dedust.io';
 const DEFAULT_PROTOCOLS = [
     'dedust',
     'dedust_v3',
-    'dedust_v3_memepad',
+    // 'dedust_v3_memepad',
     'stonfi_v1',
     'stonfi_v2',
     'tonco',
