@@ -12,16 +12,13 @@ For detailed information about DeDust Router, see the [official documentation](h
 
 ## Quick Start
 
-```typescript
-import { DeDustSwapProvider } from '@ton/walletkit/swap/dedust';
-
+```ts
 const provider = new DeDustSwapProvider({
     defaultSlippageBps: 100, // 1%
     referralAddress: 'EQ...',
     referralFeeBps: 50, // 0.5%
 });
-
-kit.swap.registerProvider(provider);
+kit.registerProvider(provider);
 ```
 
 ## Configuration Options
@@ -40,8 +37,8 @@ interface DeDustSwapProviderConfig {
 }
 
 interface SwapQuoteParams {
-    fromToken: SwapToken;
-    toToken: SwapToken;
+    from: SwapToken;
+    to: SwapToken;
     amount: string;
     network: Network;
     slippageBps?: number;
@@ -56,12 +53,16 @@ interface SwapQuoteParams {
 
 DeDust routes across multiple protocols. You can customize which protocols to use:
 
-```typescript
-import type { DeDustProviderOptions } from '@ton/walletkit/swap/dedust';
+```ts
+const TON = { address: 'ton', decimals: 9 };
+const USDT = {
+    address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs',
+    decimals: 6,
+};
 
-const quote = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
+const quote = await getSwapQuote(appKit, {
+    from: TON,
+    to: USDT,
     amount: '1000000000',
     network: Network.mainnet(),
     providerOptions: {
@@ -79,12 +80,16 @@ const quote = await kit.swap.getQuote({
 
 Pass referral options via `providerOptions` to earn fees on swaps:
 
-```typescript
-import type { DeDustProviderOptions } from '@ton/walletkit/swap/dedust';
+```ts
+const TON = { address: 'ton', decimals: 9 };
+const USDT = {
+    address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs',
+    decimals: 6,
+};
 
-const quote = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
+const quote = await getSwapQuote(appKit, {
+    from: TON,
+    to: USDT,
     amount: '1000000000',
     network: Network.mainnet(),
     providerOptions: {
@@ -98,17 +103,24 @@ const quote = await kit.swap.getQuote({
 
 You can set a global referrer in provider config and override it for specific requests:
 
-```typescript
+```ts
+const TON = { address: 'ton', decimals: 9 };
+const USDT = {
+    address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs',
+    decimals: 6,
+};
+
 // Global referrer in config
 const provider = new DeDustSwapProvider({
     referralAddress: 'EQ...global',
     referralFeeBps: 50,
 });
+appKit.registerProvider(provider);
 
 // Override for specific quote
-const quote = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
+const quote = await getSwapQuote(appKit, {
+    from: TON,
+    to: USDT,
     amount: '1000000000',
     network: Network.mainnet(),
     providerOptions: {
@@ -118,9 +130,9 @@ const quote = await kit.swap.getQuote({
 });
 
 // Or use global settings by omitting providerOptions
-const quote2 = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
+const quote2 = await getSwapQuote(appKit, {
+    from: TON,
+    to: USDT,
     amount: '1000000000',
     network: Network.mainnet(),
     // Uses global referrer from config

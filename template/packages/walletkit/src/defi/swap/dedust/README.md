@@ -10,17 +10,7 @@ For detailed information about DeDust Router, see the [official documentation](h
 
 ## Quick Start
 
-```typescript
-import { DeDustSwapProvider } from '@ton/walletkit/swap/dedust';
-
-const provider = new DeDustSwapProvider({
-    defaultSlippageBps: 100, // 1%
-    referralAddress: 'EQ...',
-    referralFeeBps: 50, // 0.5%
-});
-
-kit.swap.registerProvider(provider);
-```
+%%demo/examples/src/appkit/swap#DEDUST_QUICK_START%%
 
 ## Configuration Options
 
@@ -38,8 +28,8 @@ interface DeDustSwapProviderConfig {
 }
 
 interface SwapQuoteParams {
-    fromToken: SwapToken;
-    toToken: SwapToken;
+    from: SwapToken;
+    to: SwapToken;
     amount: string;
     network: Network;
     slippageBps?: number;
@@ -54,76 +44,19 @@ interface SwapQuoteParams {
 
 DeDust routes across multiple protocols. You can customize which protocols to use:
 
-```typescript
-import type { DeDustProviderOptions } from '@ton/walletkit/swap/dedust';
-
-const quote = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
-    amount: '1000000000',
-    network: Network.mainnet(),
-    providerOptions: {
-        protocols: ['dedust', 'dedust_v3', 'stonfi_v1', 'stonfi_v2', 'tonco'],
-        excludeProtocols: ['memeslab'],
-        onlyVerifiedPools: true,
-        maxSplits: 4,
-        maxLength: 3,
-        excludeVolatilePools: true,
-    } as DeDustProviderOptions,
-});
-```
+%%demo/examples/src/appkit/swap#DEDUST_PROTOCOL_ROUTING%%
 
 ## Referral Fees
 
 Pass referral options via `providerOptions` to earn fees on swaps:
 
-```typescript
-import type { DeDustProviderOptions } from '@ton/walletkit/swap/dedust';
-
-const quote = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
-    amount: '1000000000',
-    network: Network.mainnet(),
-    providerOptions: {
-        referralAddress: 'EQ...',
-        referralFeeBps: 50, // 0.5%
-    } as DeDustProviderOptions,
-});
-```
+%%demo/examples/src/appkit/swap#DEDUST_REFERRAL_FEES%%
 
 ### Overriding Referral Settings
 
 You can set a global referrer in provider config and override it for specific requests:
 
-```typescript
-// Global referrer in config
-const provider = new DeDustSwapProvider({
-    referralAddress: 'EQ...global',
-    referralFeeBps: 50,
-});
-
-// Override for specific quote
-const quote = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
-    amount: '1000000000',
-    network: Network.mainnet(),
-    providerOptions: {
-        referralAddress: 'EQ...different', // Uses this instead of global
-        referralFeeBps: 75,
-    } as DeDustProviderOptions,
-});
-
-// Or use global settings by omitting providerOptions
-const quote2 = await kit.swap.getQuote({
-    fromToken: { address: 'ton', decimals: 9 },
-    toToken: { address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', decimals: 6 },
-    amount: '1000000000',
-    network: Network.mainnet(),
-    // Uses global referrer from config
-});
-```
+%%demo/examples/src/appkit/swap#DEDUST_OVERRIDING_REFERRAL%%
 
 ## Resources
 
