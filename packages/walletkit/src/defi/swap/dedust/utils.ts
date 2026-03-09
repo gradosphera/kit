@@ -70,7 +70,5 @@ export const isDeDustQuoteMetadata = (metadata: unknown): metadata is DeDustQuot
 
     const meta = metadata as Record<string, unknown>;
 
-    return (
-        typeof meta.quoteResponse === 'object' && meta.quoteResponse !== null && typeof meta.slippageBps === 'number'
-    );
+    return typeof meta.quoteResponse === 'object' && meta.quoteResponse !== null;
 };
