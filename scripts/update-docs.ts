@@ -299,8 +299,16 @@ async function processTemplateFile(templatePath: string): Promise<void> {
 
     // Use target from template parameters
     const outPath = path.resolve(cwd, params.target);
+    const sourceRelative = path.relative(cwd, templatePath);
+    const generatedHeader = `<!--
+This file is auto-generated. Do not edit manually.
+Changes will be overwritten when running the docs update script.
+Source template: ${sourceRelative}
+-->
+
+`;
     await fs.mkdir(path.dirname(outPath), { recursive: true });
-    await fs.writeFile(outPath, result, 'utf8');
+    await fs.writeFile(outPath, generatedHeader + result, 'utf8');
     console.log(`Updated markdown: ${path.relative(cwd, outPath)} from ${path.relative(cwd, templatePath)}`);
 }
 
