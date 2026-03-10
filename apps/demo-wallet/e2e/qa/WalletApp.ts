@@ -8,6 +8,7 @@
 
 import type { BrowserContext } from '@playwright/test';
 import type { Page } from '@playwright/test';
+
 import { TEST_PASSWORD } from '../constants';
 
 export function isExtensionWalletSource(source: string): boolean {
