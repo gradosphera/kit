@@ -57,15 +57,11 @@ export const isOmnistonQuoteMetadata = (metadata: unknown): metadata is Omniston
     }
 
     const meta = metadata as Record<string, unknown>;
-    const omnistonQuote =
-        typeof meta.omnistonQuote === 'object' && meta.omnistonQuote !== null
-            ? (meta.omnistonQuote as Record<string, unknown>)
-            : undefined;
 
     return (
-        !!omnistonQuote &&
-        typeof omnistonQuote.quoteId === 'string' &&
-        typeof omnistonQuote.bidUnits === 'string' &&
-        typeof omnistonQuote.askUnits === 'string'
+        typeof meta.quoteId === 'string' &&
+        typeof meta.resolverId === 'string' &&
+        typeof meta.omnistonQuote === 'object' &&
+        meta.omnistonQuote !== null
     );
 };

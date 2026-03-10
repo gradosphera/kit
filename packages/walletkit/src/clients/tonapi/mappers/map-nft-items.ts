@@ -38,7 +38,6 @@ export function mapNftItem(item: TonApiNftItem): NFT {
         })),
         extra: {
             isVerified,
-            trust: item.trust,
             contentUrl: item.metadata.content_url,
             previews: item.previews,
             approvedBy: item.approved_by,

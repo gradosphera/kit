@@ -26,5 +26,11 @@
 - ✅ Better `.t.me` subdomain resolution than Toncenter
 
 ## Not implemented
+- `sendBoc`
 - `fetchEmulation`
+- `getAccountTransactions`
+- `getTransactionsByHash`
 - `getPendingTransactions`
+- `getTrace`
+- `getPendingTrace`
+- `getEvents`

@@ -37,24 +37,21 @@ function createWalletKitInstance(walletKitConfig?: WalletKitConfig): ITonWalletK
         // TODO: Tetra
         networks: {
             [Network.mainnet().chainId]: {
-                apiClient: new ApiClientTonApi({
-                    network: Network.mainnet(),
-                    apiKey: walletKitConfig?.tonApiKeyMainnet,
-                    minRequestIntervalMs: walletKitConfig?.tonApiMinRequestIntervalMs,
-                }),
+                apiClient: {
+                    url: 'https://toncenter.com',
+                    key: walletKitConfig?.tonApiKeyMainnet,
+                },
             },
             [Network.testnet().chainId]: {
-                apiClient: new ApiClientTonApi({
-                    network: Network.testnet(),
-                    apiKey: walletKitConfig?.tonApiKeyTestnet,
-                    minRequestIntervalMs: walletKitConfig?.tonApiMinRequestIntervalMs,
-                }),
+                apiClient: {
+                    url: 'https://testnet.toncenter.com',
+                    key: walletKitConfig?.tonApiKeyTestnet,
+                },
             },
             [Network.tetra().chainId]: {
                 apiClient: new ApiClientTonApi({
                     network: Network.tetra(),
                     apiKey: walletKitConfig?.tonApiKeyTetra,
-                    minRequestIntervalMs: walletKitConfig?.tonApiMinRequestIntervalMs,
                 }),
             },
         },
