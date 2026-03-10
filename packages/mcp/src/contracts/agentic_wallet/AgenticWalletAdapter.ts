@@ -45,7 +45,7 @@ import {
 } from '@ton/walletkit';
 
 import { AgenticWalletCodeCell } from './AgenticWallet.source.js';
-import { ActionSendMsg, packActionsList } from '../w5_ownable/actions.js';
+import { ActionSendMsg, packActionsList } from './actions.js';
 
 export const defaultAgenticWorkchain = 0;
 
