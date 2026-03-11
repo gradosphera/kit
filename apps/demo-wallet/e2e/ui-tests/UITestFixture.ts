@@ -18,6 +18,7 @@ import { isExtensionWalletSource } from '../qa/WalletApp';
 export interface UITestFixture {
     context: BrowserContext;
     page: Page;
+    webOnly: void;
 }
 
 export interface UITestConfig {
@@ -41,6 +42,10 @@ export function uiTestFixture(config: UITestConfig = {}, slowMo = 0) {
     const isExtension = isExtensionWalletSource(walletSource);
 
     return test.extend<UITestFixture>({
+        webOnly: [async ({}, use) => {
+            test.skip(isExtension, 'web-only: not supported in extension mode');
+            await use();
+        }, { auto: false }],
         context: async ({ context: _ }, use) => {
             const extensionPath = isExtension ? walletSource : '';
             const context = await launchPersistentContext(extensionPath, slowMo);

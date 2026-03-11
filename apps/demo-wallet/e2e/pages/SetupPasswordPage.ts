@@ -64,9 +64,9 @@ export class SetupPasswordPage {
     async submitByPasting(password: string) {
         await this.page.evaluate((pwd) => navigator.clipboard.writeText(pwd), password);
         await this.passwordInput.click();
-        await this.page.keyboard.press('Meta+v');
+        await this.page.keyboard.press('ControlOrMeta+v');
         await this.confirmInput.click();
-        await this.page.keyboard.press('Meta+v');
+        await this.page.keyboard.press('ControlOrMeta+v');
         await this.submitButton.click();
     }
 

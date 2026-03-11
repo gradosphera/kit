@@ -100,6 +100,7 @@ jobs:
 
     - name: Upload results to Allure TestOps
       if: always()
+      continue-on-error: true
       run: |
         curl -fsSL https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -o allurectl
         chmod +x allurectl
