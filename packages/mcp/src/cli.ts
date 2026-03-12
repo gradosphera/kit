@@ -60,6 +60,7 @@ import {
     ConfigBackedAgenticSetupSessionStore,
 } from './services/AgenticSetupSessionManager.js';
 import { createApiClient } from './utils/ton-client.js';
+import { parseCliArgs } from './utils/cli-args.js';
 import { UINT_256_MAX } from './utils/math.js';
 
 const SERVER_NAME = 'ton-mcp';
@@ -87,33 +88,6 @@ function log(message: string) {
     console.error(`[${SERVER_NAME}] ${message}`);
 }
 
-function parseNamedArgs(args: string[]): Record<string, unknown> {
-    const result: Record<string, unknown> = {};
-    for (let i = 0; i < args.length; i++) {
-        const arg = args[i];
-        if (!arg.startsWith('--')) continue;
-        const key = arg.slice(2);
-        const next = args[i + 1];
-        if (!next || next.startsWith('--')) {
-            result[key] = true;
-            continue;
-        }
-        i++;
-        // Only JSON-parse objects and arrays; keep everything else as a plain string.
-        // This avoids turning "0.1" into the number 0.1, which breaks tools that expect string amounts.
-        if (next.startsWith('{') || next.startsWith('[')) {
-            try {
-                result[key] = JSON.parse(next);
-            } catch {
-                result[key] = next;
-            }
-        } else {
-            result[key] = next;
-        }
-    }
-    return result;
-}
-
 function parseArgs() {
     const args = process.argv.slice(2);
     const httpIndex = args.indexOf('--http');
@@ -131,7 +105,7 @@ function parseArgs() {
 
     const toolName = args.find((a) => !a.startsWith('-'));
     if (toolName) {
-        return { mode: 'cli' as const, toolName, toolArgs: parseNamedArgs(args) };
+        return { mode: 'cli' as const, toolName, rawArgs: args };
     }
 
     return { mode: 'stdio' as const };
@@ -378,7 +352,7 @@ function createHttpSessionManager(host: string, port: number): AgenticSetupSessi
     });
 }
 
-async function startCli(toolName: string, toolArgs: Record<string, unknown>) {
+async function startCli(toolName: string, rawArgs: string[]) {
     const sessionManager = createStdioSessionManager();
     const { server, kit } = await createWalletAndServer(sessionManager);
 
@@ -390,7 +364,10 @@ async function startCli(toolName: string, toolArgs: Record<string, unknown>) {
 
     let isError = false;
     try {
-        const result = await client.callTool({ name: toolName, arguments: toolArgs }, CallToolResultSchema);
+        const tools = await client.listTools();
+        const toolSchema = tools.tools.find((tool) => tool.name === toolName)?.inputSchema;
+        const normalizedArgs = parseCliArgs(rawArgs, toolSchema);
+        const result = await client.callTool({ name: toolName, arguments: normalizedArgs }, CallToolResultSchema);
         const content = result.content as Array<{ type: string; text?: string }>;
         for (const item of content) {
             if (item.type === 'text' && item.text !== undefined) {
@@ -489,7 +466,7 @@ const config = parseArgs();
 if (config.mode === 'http') {
     startHttp(config.port, config.host).catch(fatalError);
 } else if (config.mode === 'cli') {
-    startCli(config.toolName, config.toolArgs).catch(fatalError);
+    startCli(config.toolName, config.rawArgs).catch(fatalError);
 } else {
     startStdio().catch(fatalError);
 }
