@@ -1,13 +1,13 @@
 ---
 name: ton-manage-wallets
-description: Manage multiple TON wallets, import agentic wallets, rotate operator keys, and deploy sub-wallets. Use when the user wants to switch wallets, list wallets, import an existing wallet, rotate an operator key, deploy a sub-wallet, or manage their wallet registry.
+description: Manage multiple TON wallets, import agentic wallets and rotate operator keys. Use when the user wants to switch wallets, list wallets, import an existing wallet, rotate an operator key, or manage their wallet registry.
 user-invocable: true
 disable-model-invocation: false
 ---
 
 # TON Wallet Management
 
-Manage the local wallet registry and perform advanced agentic wallet operations including import, key rotation, and sub-wallet deployment.
+Manage the local wallet registry and perform advanced agentic wallet operations including import and key rotation.
 
 ## MCP Tools
 
@@ -25,11 +25,10 @@ Manage the local wallet registry and perform advanced agentic wallet operations 
 | Tool | Required | Optional |
 | ---- | -------- | -------- |
 | `agentic_validate_wallet` | `address` | `network`, `ownerAddress`, `collectionAddress` |
-| `agentic_list_wallets_by_owner` | `ownerAddress` | `collectionAddress` |
-| `agentic_import_wallet` | `address` | `operatorPrivateKey`, `name` |
+| `agentic_list_wallets_by_owner` | `ownerAddress` | `network` |
+| `agentic_import_wallet` | `address` | `name` |
 | `agentic_rotate_operator_key` | `walletSelector` | — |
 | `agentic_complete_rotate_operator_key` | `rotationId` | — |
-| `agentic_deploy_subwallet` | `operatorPublicKey`, `metadata` | `amountTon` |
 
 ## Workflows
 
@@ -42,11 +41,6 @@ Manage the local wallet registry and perform advanced agentic wallet operations 
 1. Call `agentic_validate_wallet` to verify the wallet address and contract
 2. Call `agentic_import_wallet` to add it to the registry
 3. If the agent needs to sign transactions and no operator key is available, call `agentic_rotate_operator_key` and then `agentic_complete_rotate_operator_key` after the user applies the key change on-chain via the dashboard
-
-### Deploy Sub-Wallet
-1. The active wallet must be an agentic root wallet (`deployedByUser=true`)
-2. Call `agentic_deploy_subwallet` with the `operatorPublicKey` for the new sub-wallet and `metadata` (must include `name`)
-3. Poll `get_transaction_status` until the deploy transaction is confirmed
 
 ### Rotate Operator Key
 1. Call `agentic_rotate_operator_key` — generates a new key pair and returns a dashboard URL for the user to apply the change on-chain

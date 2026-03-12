@@ -132,7 +132,7 @@ npx @ton/mcp get_jettons
 npx @ton/mcp get_transactions --limit 10
 
 # Get balance of a specific jetton
-npx @ton/mcp get_jetton_balance --jettonAddress EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs
+npx @ton/mcp get_jetton_balance --address EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs
 
 # Resolve a .ton domain
 npx @ton/mcp resolve_dns --domain foundation.ton

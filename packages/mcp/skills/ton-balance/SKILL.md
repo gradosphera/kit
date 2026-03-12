@@ -19,7 +19,7 @@ Read-only queries for wallet balances, token holdings, and transaction history o
 | `get_jetton_balance` | `jettonAddress` | `walletSelector` |
 | `get_jettons` | — | `walletSelector` |
 | `get_jettons_by_address` | `address` | — |
-| `get_jetton_info` | `jettonAddress` | — |
+| `get_jetton_info` | `address` | — |
 | `get_known_jettons` | — | — |
 | `get_transactions` | — | `limit`, `walletSelector` |
 | `get_transaction_status` | `normalizedHash` | `walletSelector` |
