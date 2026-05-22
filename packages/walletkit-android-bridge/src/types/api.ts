@@ -556,16 +556,9 @@ export interface WalletKitBridgeApi {
         messageBoc: string;
         ignoreSignature?: boolean;
     }): PromiseOrValue<unknown>;
-    walletClientAccountState(args: {
-        walletId: string;
-        address: string;
-        seqno?: number;
-    }): PromiseOrValue<unknown>;
+    walletClientAccountState(args: { walletId: string; address: string; seqno?: number }): PromiseOrValue<unknown>;
     walletClientAccountStates(args: { walletId: string; addresses: string[] }): PromiseOrValue<unknown>;
-    walletClientResolveDnsWallet(args: {
-        walletId: string;
-        domain: string;
-    }): PromiseOrValue<{ result: string | null }>;
+    walletClientResolveDnsWallet(args: { walletId: string; domain: string }): PromiseOrValue<{ result: string | null }>;
     walletClientBackResolveDnsWallet(args: {
         walletId: string;
         address: string;
