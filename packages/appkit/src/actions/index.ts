@@ -109,6 +109,23 @@ export { transferNft, type TransferNftParameters, type TransferNftReturnType } f
 export { registerProvider, type RegisterProviderOptions } from './providers/register-provider';
 
 // Gasless
+export { getGaslessManager, type GetGaslessManagerReturnType } from './gasless/get-gasless-manager';
+export {
+    getGaslessProvider,
+    type GetGaslessProviderOptions,
+    type GetGaslessProviderReturnType,
+} from './gasless/get-gasless-provider';
+export { getGaslessProviders, type GetGaslessProvidersReturnType } from './gasless/get-gasless-providers';
+export {
+    setDefaultGaslessProvider,
+    type SetDefaultGaslessProviderParameters,
+    type SetDefaultGaslessProviderReturnType,
+} from './gasless/set-default-gasless-provider';
+export {
+    watchGaslessProviders,
+    type WatchGaslessProvidersParameters,
+    type WatchGaslessProvidersReturnType,
+} from './gasless/watch-gasless-providers';
 export {
     getGaslessConfig,
     type GetGaslessConfigOptions,
@@ -116,11 +133,11 @@ export {
     type GetGaslessConfigErrorType,
 } from './gasless/get-gasless-config';
 export {
-    estimateGasless,
-    type EstimateGaslessParameters,
-    type EstimateGaslessReturnType,
-    type EstimateGaslessErrorType,
-} from './gasless/estimate-gasless';
+    getGaslessEstimate,
+    type GetGaslessEstimateOptions,
+    type GetGaslessEstimateReturnType,
+    type GetGaslessEstimateErrorType,
+} from './gasless/get-gasless-estimate';
 export {
     sendGaslessTransaction,
     type SendGaslessTransactionParameters,

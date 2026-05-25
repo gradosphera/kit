@@ -11,6 +11,7 @@ import type { GaslessConfig, GaslessEstimateParams, GaslessEstimateResult, Gasle
 import { globalLogger } from '../../core/Logger';
 import type { ProviderFactoryContext } from '../../types/factory';
 import { DefiManager } from '../DefiManager';
+import type { GaslessErrorCode } from './errors';
 import { GaslessError } from './errors';
 
 const log = globalLogger.createChild('GaslessManager');
@@ -74,6 +75,6 @@ export class GaslessManager extends DefiManager<GaslessProviderInterface> implem
     }
 
     protected createError(message: string, code: string, details?: unknown): GaslessError {
-        return new GaslessError(message, code, details);
+        return new GaslessError(message, code as GaslessErrorCode, details);
     }
 }

@@ -13,16 +13,16 @@ export enum GaslessErrorCode {
     EstimateFailed = 'ESTIMATE_FAILED',
     SendFailed = 'SEND_FAILED',
     ConfigFailed = 'CONFIG_FAILED',
+    SignMessageNotSupported = 'SIGN_MESSAGE_NOT_SUPPORTED',
+    TooManyMessages = 'TOO_MANY_MESSAGES',
 }
 
 export class GaslessError extends DefiError {
-    static readonly UNSUPPORTED_FEE_JETTON = GaslessErrorCode.UnsupportedFeeJetton;
-    static readonly ESTIMATE_FAILED = GaslessErrorCode.EstimateFailed;
-    static readonly SEND_FAILED = GaslessErrorCode.SendFailed;
-    static readonly CONFIG_FAILED = GaslessErrorCode.ConfigFailed;
+    public readonly code: GaslessErrorCode;
 
-    constructor(message: string, code: string, details?: unknown) {
+    constructor(message: string, code: GaslessErrorCode, details?: unknown) {
         super(message, code, details);
         this.name = 'GaslessError';
+        this.code = code;
     }
 }

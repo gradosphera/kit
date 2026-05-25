@@ -12,10 +12,12 @@ export {
     type UseGaslessConfigReturnType,
 } from './hooks/use-gasless-config';
 export {
-    useEstimateGasless,
-    type UseEstimateGaslessParameters,
-    type UseEstimateGaslessReturnType,
-} from './hooks/use-estimate-gasless';
+    useGaslessEstimate,
+    type UseGaslessEstimateParameters,
+    type UseGaslessEstimateReturnType,
+} from './hooks/use-gasless-estimate';
+export { useGaslessProvider, type UseGaslessProviderReturnType } from './hooks/use-gasless-provider';
+export { useGaslessProviders, type UseGaslessProvidersReturnType } from './hooks/use-gasless-providers';
 export {
     useSendGaslessTransaction,
     type UseSendGaslessTransactionParameters,

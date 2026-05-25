@@ -17,7 +17,7 @@ import {
 import { createDeDustProvider } from '@ton/appkit/swap/dedust';
 import { createOmnistonProvider } from '@ton/appkit/swap/omniston';
 import { createTonstakersProvider } from '@ton/appkit/staking/tonstakers';
-import { TonApiGaslessProvider } from '@ton/appkit/gasless/tonapi';
+import { createTonApiGaslessProvider } from '@ton/appkit/gasless/tonapi';
 import { TonApiClient } from '@ton-api/client';
 
 import { ENV_TON_API_KEY_TESTNET, ENV_TON_API_KEY_MAINNET } from '@/core/configs/env';
@@ -60,6 +60,6 @@ export const appKit = new AppKit({
         createTonstakersProvider(),
         createTonCenterStreamingProvider({ network: Network.mainnet(), apiKey: ENV_TON_API_KEY_MAINNET }),
         createTonCenterStreamingProvider({ network: Network.testnet(), apiKey: ENV_TON_API_KEY_TESTNET }),
-        new TonApiGaslessProvider({ client: mainnetTonApi }),
+        createTonApiGaslessProvider({ client: mainnetTonApi }),
     ],
 });

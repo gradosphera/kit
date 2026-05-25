@@ -17,8 +17,9 @@ import type {
 } from '../../../api/models';
 import { Network } from '../../../api/models';
 import { globalLogger } from '../../../core/Logger';
+import type { ProviderFactoryContext } from '../../../types/factory';
 import { CallForSuccess } from '../../../utils/retry';
-import { GaslessError } from '../errors';
+import { GaslessError, GaslessErrorCode } from '../errors';
 import { GaslessProvider } from '../GaslessProvider';
 import { buildInternalMessageCell, cellToBase64, internalBocToExternalMessageBoc, stripHexPrefix } from './utils';
 
@@ -32,6 +33,8 @@ export interface TonApiGaslessProviderConfig {
     client: TonApiClient;
     /** Optional provider id override. Defaults to 'tonapi'. */
     providerId?: string;
+    /** Networks on which this provider can operate. Defaults to `[Network.mainnet()]`. */
+    networks?: Network[];
     /** Number of send retries on transient errors. Defaults to 5. */
     sendRetries?: number;
     /** Delay between send retries in ms. Defaults to 2000. */
@@ -60,6 +63,7 @@ export class TonApiGaslessProvider extends GaslessProvider {
     readonly providerId: string;
 
     private readonly client: TonApiClient;
+    private readonly networks: Network[];
     private readonly sendRetries: number;
     private readonly sendRetryDelayMs: number;
 
@@ -67,12 +71,13 @@ export class TonApiGaslessProvider extends GaslessProvider {
         super();
         this.client = config.client;
         this.providerId = config.providerId ?? 'tonapi';
+        this.networks = config.networks ?? [Network.mainnet()];
         this.sendRetries = config.sendRetries ?? 5;
         this.sendRetryDelayMs = config.sendRetryDelayMs ?? 2000;
     }
 
     getSupportedNetworks(): Network[] {
-        return [Network.mainnet()];
+        return this.networks;
     }
 
     async getConfig(): Promise<GaslessConfig> {
@@ -88,7 +93,7 @@ export class TonApiGaslessProvider extends GaslessProvider {
             log.error('Failed to fetch gasless config', { error });
             throw new GaslessError(
                 error instanceof Error ? error.message : 'Failed to fetch gasless config',
-                GaslessError.CONFIG_FAILED,
+                GaslessErrorCode.ConfigFailed,
                 error,
             );
         }
@@ -126,7 +131,7 @@ export class TonApiGaslessProvider extends GaslessProvider {
             log.error('Failed to estimate gasless transaction', { error, params });
             throw new GaslessError(
                 error instanceof Error ? error.message : 'Failed to estimate gasless transaction',
-                GaslessError.ESTIMATE_FAILED,
+                GaslessErrorCode.EstimateFailed,
                 error,
             );
         }
@@ -150,9 +155,19 @@ export class TonApiGaslessProvider extends GaslessProvider {
             log.error('Failed to send gasless transaction', { error });
             throw new GaslessError(
                 error instanceof Error ? error.message : 'Failed to send gasless transaction',
-                GaslessError.SEND_FAILED,
+                GaslessErrorCode.SendFailed,
                 error,
             );
         }
     }
 }
+
+/**
+ * Factory for `TonApiGaslessProvider` matching the `(ctx) => Provider` shape
+ * expected by `AppKit.registerProvider`.
+ */
+export const createTonApiGaslessProvider = (
+    config: TonApiGaslessProviderConfig,
+): ((ctx: ProviderFactoryContext) => TonApiGaslessProvider) => {
+    return () => new TonApiGaslessProvider(config);
+};

@@ -6,7 +6,7 @@
  *
  */
 
-export { GaslessProvider, GaslessError, GaslessManager } from '@ton/walletkit';
+export { GaslessProvider, GaslessError, GaslessErrorCode, GaslessManager } from '@ton/walletkit';
 
 export type {
     GaslessAPI,

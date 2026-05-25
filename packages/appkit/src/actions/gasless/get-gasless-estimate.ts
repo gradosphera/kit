@@ -12,7 +12,7 @@ import type { TransactionRequestMessage } from '../../types/transaction';
 import type { AppKit } from '../../core/app-kit';
 import { getSelectedWallet } from '../wallets/get-selected-wallet';
 
-export interface EstimateGaslessParameters {
+export interface GetGaslessEstimateOptions {
     /** Master address of the jetton used to pay the relayer's fee */
     feeJettonMaster: string;
     /** User's messages to include in the gasless transaction */
@@ -21,20 +21,23 @@ export interface EstimateGaslessParameters {
     providerId?: string;
 }
 
-export type EstimateGaslessReturnType = Promise<GaslessEstimateResult>;
+export type GetGaslessEstimateReturnType = Promise<GaslessEstimateResult>;
 
-export type EstimateGaslessErrorType = Error;
+export type GetGaslessEstimateErrorType = Error;
 
 /**
  * Ask the relayer to estimate a gasless transaction.
  *
  * Returns relayer-wrapped messages (ready to be signed via `signMessage`), the
- * fee charged in the fee jetton, and the bundle validity window.
+ * fee charged in the fee jetton, and the bundle validity window (`validUntil`).
+ *
+ * The result is intended to be passed verbatim to `sendGaslessTransaction`,
+ * which validates `validUntil` and forwards the signed BoC to the relayer.
  */
-export const estimateGasless = async (
+export const getGaslessEstimate = async (
     appKit: AppKit,
-    parameters: EstimateGaslessParameters,
-): EstimateGaslessReturnType => {
+    options: GetGaslessEstimateOptions,
+): GetGaslessEstimateReturnType => {
     const wallet = getSelectedWallet(appKit);
 
     if (!wallet) {
@@ -43,11 +46,11 @@ export const estimateGasless = async (
 
     return appKit.gaslessManager.estimate(
         {
-            feeJettonMaster: parameters.feeJettonMaster,
+            feeJettonMaster: options.feeJettonMaster,
             walletAddress: wallet.getAddress(),
             walletPublicKey: wallet.getPublicKey(),
-            messages: parameters.messages,
+            messages: options.messages,
         },
-        parameters.providerId,
+        options.providerId,
     );
 };

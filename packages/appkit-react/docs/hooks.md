@@ -837,6 +837,110 @@ return (
 );
 ```
 
+## Gasless
+
+Gasless lets a dApp submit on-chain transactions without the user holding TON for gas: a relayer co-signs and broadcasts the transaction, taking a jetton fee in return. The connected wallet must support the `SignMessage` TonConnect feature.
+
+### `useGaslessConfig`
+
+Hook to fetch the relayer config (supported jettons + relay address).
+
+```tsx
+const { data: config, isLoading } = useGaslessConfig();
+return (
+    <select>
+        {config?.supportedGasJettons.map((j) => (
+            <option key={j.jettonMaster} value={j.jettonMaster}>
+                {j.jettonMaster}
+            </option>
+        ))}
+    </select>
+);
+```
+
+### `useGaslessEstimate`
+
+Hook to fetch a gasless estimate. Auto-refetches as inputs change; cached results become stale after ~2 minutes (matches the relayer `validUntil` window).
+
+```tsx
+const { data: estimate, isFetching } = useGaslessEstimate({
+    feeJettonMaster: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', // USDT
+    messages: [
+        {
+            address: 'EQ...jetton_wallet_address',
+            amount: '60000000', // 0.06 TON gas budget
+            payload: jettonTransferPayloadBase64,
+        },
+    ],
+});
+
+return (
+    <div>
+        {isFetching && <span>Estimating...</span>}
+        {estimate && (
+            <>
+                <div>Fee: {estimate.fee}</div>
+                <div>Valid until: {new Date(estimate.validUntil * 1000).toISOString()}</div>
+            </>
+        )}
+    </div>
+);
+```
+
+### `useSendGaslessTransaction`
+
+Hook to sign a previously computed estimate and submit the resulting BoC to the relayer.
+
+Throws:
+- `GaslessError(SIGN_MESSAGE_NOT_SUPPORTED)` if the wallet does not advertise `SignMessage`.
+- `GaslessError(TOO_MANY_MESSAGES)` if the estimate carries more messages than the wallet's `maxMessages` cap.
+
+```tsx
+const { data: estimate } = useGaslessEstimate({ feeJettonMaster, messages });
+const { mutateAsync: sendGasless, isPending } = useSendGaslessTransaction();
+
+const handleSend = async () => {
+    if (!estimate) return;
+    const { internalBoc, fee } = await sendGasless({ estimate });
+    console.log('Submitted. Fee:', fee, 'BoC:', internalBoc);
+};
+
+return (
+    <button onClick={handleSend} disabled={!estimate || isPending}>
+        {isPending ? 'Sending...' : 'Send Gasless'}
+    </button>
+);
+```
+
+### `useGaslessProvider`
+
+Hook to read and change the currently selected gasless provider. Returns a tuple `[provider, setProviderId]` — mirrors `useSwapProvider`.
+
+```tsx
+const [provider, setProviderId] = useGaslessProvider();
+return (
+    <div>
+        <div>Current: {provider?.providerId ?? 'none'}</div>
+        <button onClick={() => setProviderId('tonapi')}>Use TonApi</button>
+    </div>
+);
+```
+
+### `useGaslessProviders`
+
+Hook to get all registered gasless providers. The returned array keeps a stable reference until the provider list changes.
+
+```tsx
+const providers = useGaslessProviders();
+return (
+    <ul>
+        {providers.map((p) => (
+            <li key={p.providerId}>{p.providerId}</li>
+        ))}
+    </ul>
+);
+```
+
 ## Transaction
 
 ### `useSendTransaction`

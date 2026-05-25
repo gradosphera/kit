@@ -19,7 +19,7 @@ import {
 } from '@ton/core';
 
 import type { Base64String, TransactionRequestMessage } from '../../../api/models';
-import { GaslessError } from '../errors';
+import { GaslessError, GaslessErrorCode } from '../errors';
 
 export const stripHexPrefix = (value: string): string => {
     return value.startsWith('0x') ? value.slice(2) : value;
@@ -63,7 +63,7 @@ export const internalBocToExternalMessageBoc = (internalBoc: Base64String): Cell
     const { info, body, init } = loadMessageRelaxed(parsed.beginParse());
 
     if (info.type !== 'internal') {
-        throw new GaslessError('Signed message must be an internal message', GaslessError.SEND_FAILED);
+        throw new GaslessError('Signed message must be an internal message', GaslessErrorCode.SendFailed);
     }
 
     return beginCell()

@@ -1,0 +1,75 @@
+/**
+ * Copyright (c) TonTech.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+import type { AppKit } from '@ton/appkit';
+import {
+    getGaslessConfig,
+    getGaslessEstimate,
+    getGaslessManager,
+    getGaslessProvider,
+    getGaslessProviders,
+    sendGaslessTransaction,
+    setDefaultGaslessProvider,
+    watchGaslessProviders,
+} from '@ton/appkit';
+
+export const gaslessExample = async (appKit: AppKit) => {
+    // SAMPLE_START: GET_GASLESS_MANAGER
+    const gaslessManager = getGaslessManager(appKit);
+    // SAMPLE_END: GET_GASLESS_MANAGER
+
+    // SAMPLE_START: GET_GASLESS_PROVIDER
+    const provider = getGaslessProvider(appKit, { id: 'tonapi' });
+    // SAMPLE_END: GET_GASLESS_PROVIDER
+
+    // SAMPLE_START: GET_GASLESS_PROVIDERS
+    const providers = getGaslessProviders(appKit);
+    console.log(
+        'Registered gasless providers:',
+        providers.map((p) => p.providerId),
+    );
+    // SAMPLE_END: GET_GASLESS_PROVIDERS
+
+    // SAMPLE_START: SET_DEFAULT_GASLESS_PROVIDER
+    setDefaultGaslessProvider(appKit, { providerId: 'tonapi' });
+    // SAMPLE_END: SET_DEFAULT_GASLESS_PROVIDER
+
+    // SAMPLE_START: WATCH_GASLESS_PROVIDERS
+    const unsubscribe = watchGaslessProviders(appKit, {
+        onChange: () => console.log('Gasless providers updated'),
+    });
+    unsubscribe();
+    // SAMPLE_END: WATCH_GASLESS_PROVIDERS
+
+    // SAMPLE_START: GET_GASLESS_CONFIG
+    const config = await getGaslessConfig(appKit);
+    const feeJetton = config.supportedGasJettons[0].jettonMaster;
+    console.log('Relay address:', config.relayAddress);
+    // SAMPLE_END: GET_GASLESS_CONFIG
+
+    // SAMPLE_START: GET_GASLESS_ESTIMATE
+    const estimate = await getGaslessEstimate(appKit, {
+        feeJettonMaster: feeJetton,
+        messages: [
+            {
+                address: 'EQ...jetton_wallet_address',
+                amount: '60000000', // 0.06 TON gas budget
+                payload: 'te6cckEBAQEAAgAAAA==' as never,
+            },
+        ],
+    });
+    console.log('Relayer fee:', estimate.fee, 'valid until:', estimate.validUntil);
+    // SAMPLE_END: GET_GASLESS_ESTIMATE
+
+    // SAMPLE_START: SEND_GASLESS_TRANSACTION
+    const { internalBoc, fee } = await sendGaslessTransaction(appKit, { estimate });
+    console.log('Submitted gasless transaction. Fee:', fee, 'BoC:', internalBoc);
+    // SAMPLE_END: SEND_GASLESS_TRANSACTION
+
+    return { gaslessManager, provider, config, estimate };
+};
