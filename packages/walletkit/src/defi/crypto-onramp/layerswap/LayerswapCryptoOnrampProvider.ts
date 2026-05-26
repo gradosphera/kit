@@ -26,13 +26,12 @@ import {
     DEFAULT_LAYERSWAP_SUPPORTED_CHAINS,
     LAYERSWAP_DESTINATION_NETWORK,
     LAYERSWAP_DESTINATION_TOKENS,
-    formatBaseUnits,
     isErrorResponse,
     mapLayerswapErrorCode,
     mapStatus,
-    parseBaseUnits,
 } from './utils';
 import type { LayerswapChainConfig } from './utils';
+import { formatUnits, parseUnits } from '../../../utils/units';
 
 const LAYERSWAP_API_URL = 'https://api.layerswap.io/api/v2';
 
@@ -145,7 +144,17 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
             );
         }
 
-        const amountDecimal = formatBaseUnits(params.amount, sourceCurrency.decimals);
+        let amountDecimal: string;
+        try {
+            const baseUnits = BigInt(params.amount);
+            if (baseUnits < 0n) throw new Error('negative');
+            amountDecimal = formatUnits(baseUnits, sourceCurrency.decimals);
+        } catch {
+            throw new CryptoOnrampError(
+                `Layerswap: amount "${params.amount}" is not a non-negative integer in base units`,
+                CryptoOnrampErrorCode.InvalidParams,
+            );
+        }
 
         const body = {
             amount: amountDecimal,
@@ -198,7 +207,18 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
             );
         }
 
-        const targetAmountBaseUnits = parseBaseUnits(data.quote.receive_amount, targetCurrency.decimals);
+        let targetAmountBaseUnits: string;
+        try {
+            targetAmountBaseUnits = parseUnits(
+                data.quote.receive_amount.toString(),
+                targetCurrency.decimals,
+            ).toString();
+        } catch {
+            throw new CryptoOnrampError(
+                `Layerswap: received malformed quote amount "${data.quote.receive_amount}"`,
+                CryptoOnrampErrorCode.ProviderError,
+            );
+        }
         const rate =
             data.quote.requested_amount > 0
                 ? (data.quote.receive_amount / data.quote.requested_amount).toString()
