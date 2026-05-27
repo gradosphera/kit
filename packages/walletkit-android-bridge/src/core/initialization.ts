@@ -9,7 +9,7 @@
 /**
  * WalletKit initialization helpers used by the bridge entry point.
  */
-import type { BridgeResponse, BridgeEvent, ManifestFetchResult } from '@ton/walletkit';
+import type { BridgeResponse, BridgeEvent } from '@ton/walletkit';
 import { TONCONNECT_BRIDGE_EVENT, ApiClientTonApi, ApiClientToncenter } from '@ton/walletkit';
 import { TONCONNECT_BRIDGE_RESPONSE } from '@ton/walletkit/bridge';
 
@@ -29,7 +29,7 @@ import {
     AndroidTONConnectSessionsManager,
 } from '../adapters/AndroidTONConnectSessionsManager';
 import { AndroidAPIClientAdapter } from '../adapters/AndroidAPIClientAdapter';
-import { bridgeRequest } from '../transport/nativeBridge';
+import { unwrapRef } from '../transport/nativeBridge';
 
 interface InitTonWalletKitDeps {
     emit: (type: WalletKitBridgeEvent['type'], data?: WalletKitBridgeEvent['data']) => void;
@@ -99,17 +99,9 @@ export async function initTonWalletKit(
         networks: networksConfig,
     };
 
-    const fetchManifestRef = config?.fetchManifest;
-    if (fetchManifestRef?.__wrappedFn) {
-        const refId = fetchManifestRef.__wrappedFn;
-        const wrappedFns = window as unknown as {
-            wrapped_funcs?: Record<string, (url: string) => Promise<ManifestFetchResult>>;
-        };
-        wrappedFns.wrapped_funcs ??= {};
-        wrappedFns.wrapped_funcs[refId] ??= (url: string): Promise<ManifestFetchResult> =>
-            bridgeRequest('callByReference', { refId, args: [url] }) as Promise<ManifestFetchResult>;
-        kitOptions.fetchManifest = wrappedFns.wrapped_funcs[refId];
-    }
+    // The host's fetchManifest callback arrives as a wrapped-function reference (a function can't
+    // cross the bridge); unwrapRef turns it back into a callable over the async reverse-RPC channel.
+    kitOptions.fetchManifest = unwrapRef(config?.fetchManifest);
 
     const devOptions: Record<string, unknown> = {};
     if (config?.disableNetworkSend) {
