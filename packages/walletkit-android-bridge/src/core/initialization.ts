@@ -29,6 +29,7 @@ import {
     AndroidTONConnectSessionsManager,
 } from '../adapters/AndroidTONConnectSessionsManager';
 import { AndroidAPIClientAdapter } from '../adapters/AndroidAPIClientAdapter';
+import { bridgeRequest } from '../transport/nativeBridge';
 
 interface InitTonWalletKitDeps {
     emit: (type: WalletKitBridgeEvent['type'], data?: WalletKitBridgeEvent['data']) => void;
@@ -98,16 +99,16 @@ export async function initTonWalletKit(
         networks: networksConfig,
     };
 
-    const nativeBridge = window.WalletKitNative;
-    if (nativeBridge?.hasCustomFetchManifest?.() && nativeBridge.apiFetchManifest) {
-        const fetchFn = nativeBridge.apiFetchManifest.bind(nativeBridge);
-        kitOptions.fetchManifest = async (url: string): Promise<ManifestFetchResult> => {
-            const result = fetchFn(url);
-            if (result === null) {
-                throw new Error('apiFetchManifest returned null (no custom fetcher configured)');
-            }
-            return JSON.parse(result) as ManifestFetchResult;
-        };
+    const fetchManifestRef = config?.fetchManifest;
+    if (fetchManifestRef?.__wrappedFn) {
+        const refId = fetchManifestRef.__wrappedFn;
+        const wrappedFns = (window as unknown as {
+            wrapped_funcs?: Record<string, (url: string) => Promise<ManifestFetchResult>>;
+        });
+        wrappedFns.wrapped_funcs ??= {};
+        wrappedFns.wrapped_funcs[refId] ??= (url: string): Promise<ManifestFetchResult> =>
+            bridgeRequest('callByReference', { refId, args: [url] }) as Promise<ManifestFetchResult>;
+        kitOptions.fetchManifest = wrappedFns.wrapped_funcs[refId];
     }
 
     const devOptions: Record<string, unknown> = {};
