@@ -102,9 +102,9 @@ export async function initTonWalletKit(
     const fetchManifestRef = config?.fetchManifest;
     if (fetchManifestRef?.__wrappedFn) {
         const refId = fetchManifestRef.__wrappedFn;
-        const wrappedFns = (window as unknown as {
+        const wrappedFns = window as unknown as {
             wrapped_funcs?: Record<string, (url: string) => Promise<ManifestFetchResult>>;
-        });
+        };
         wrappedFns.wrapped_funcs ??= {};
         wrappedFns.wrapped_funcs[refId] ??= (url: string): Promise<ManifestFetchResult> =>
             bridgeRequest('callByReference', { refId, args: [url] }) as Promise<ManifestFetchResult>;
