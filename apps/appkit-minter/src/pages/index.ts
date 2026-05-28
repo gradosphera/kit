@@ -11,5 +11,3 @@ export { JettonsPage } from './jettons-page';
 export { NftsPage } from './nfts-page';
 export { SwapPage } from './swap-page';
 export { StakingPage } from './staking-page';
-export { SignMessagePage } from './sign-message-page';
-export { GaslessPage } from './gasless-page';

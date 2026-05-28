@@ -7,10 +7,20 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import type { Jetton } from '@ton/appkit';
+import type { Jetton, UserFriendlyAddress } from '@ton/appkit';
 import { getFormattedJettonInfo, getErrorMessage } from '@ton/appkit';
-import { SendTonButton, SendJettonButton, Button, Input, Modal } from '@ton/appkit-react';
+import {
+    SendTonButton,
+    SendJettonButton,
+    Button,
+    Input,
+    Modal,
+    useAddress,
+    useSelectedWallet,
+} from '@ton/appkit-react';
 import { Gem } from 'lucide-react';
+
+import { FeeAssetSelect, useGaslessTransfer } from './gasless-transfer';
 
 import { TransactionStatus } from '@/features/transaction';
 
@@ -34,6 +44,26 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
     const [comment, setComment] = useState('');
     const [transferError, setTransferError] = useState<string | null>(null);
     const [txBoc, setTxBoc] = useState<string | null>(null);
+    const [gaslessEnabled, setGaslessEnabled] = useState(false);
+    const [feeAsset, setFeeAsset] = useState<UserFriendlyAddress | null>(null);
+
+    const address = useAddress();
+    const [selectedWallet] = useSelectedWallet();
+    const supportsSignMessage = useMemo(() => {
+        const features = selectedWallet?.getSupportedFeatures();
+        if (features === undefined) return true;
+        return features.some((feature) => typeof feature === 'object' && feature.name === 'SignMessage');
+    }, [selectedWallet]);
+
+    const gasless = useGaslessTransfer({
+        enabled: gaslessEnabled,
+        tokenType,
+        jettonAddress: jetton?.address,
+        recipientAddress,
+        amount,
+        comment,
+        feeAsset,
+    });
 
     const tokenInfo = useMemo(() => {
         if (tokenType === 'TON') {
@@ -69,7 +99,19 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
         setComment('');
         setTransferError(null);
         setTxBoc(null);
+        setGaslessEnabled(false);
+        setFeeAsset(null);
         onClose();
+    };
+
+    const handleGaslessSubmit = async () => {
+        setTransferError(null);
+        try {
+            const result = await gasless.send();
+            if (result) setTxBoc(result.boc);
+        } catch (error) {
+            setTransferError(getErrorMessage(error));
+        }
     };
 
     if (!tokenInfo.decimals) return null;
@@ -109,6 +151,15 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                         <Input size="s">
                             <Input.Header>
                                 <Input.Title>Recipient Address</Input.Title>
+                                {address && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setRecipientAddress(address)}
+                                        className="text-xs text-primary hover:underline"
+                                    >
+                                        Use my address
+                                    </button>
+                                )}
                             </Input.Header>
                             <Input.Field>
                                 <Input.Input
@@ -150,6 +201,36 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                             </Input.Field>
                         </Input>
 
+                        <div className="space-y-2">
+                            <label className="inline-flex items-center gap-2 text-sm text-foreground">
+                                <input
+                                    type="checkbox"
+                                    checked={gaslessEnabled}
+                                    disabled={!supportsSignMessage}
+                                    onChange={(e) => setGaslessEnabled(e.target.checked)}
+                                />
+                                <span>Gasless — pay the gas fee in another token</span>
+                            </label>
+
+                            {!supportsSignMessage && (
+                                <p className="text-xs text-tertiary-foreground">
+                                    Connected wallet does not support gasless (no SignMessage feature).
+                                </p>
+                            )}
+
+                            {gaslessEnabled && (
+                                <>
+                                    <FeeAssetSelect value={feeAsset} onChange={setFeeAsset} />
+                                    {gasless.fee && (
+                                        <p className="text-xs text-tertiary-foreground">Gas fee: {gasless.fee}</p>
+                                    )}
+                                    {gasless.quoteError && (
+                                        <p className="text-xs text-error">{getErrorMessage(gasless.quoteError)}</p>
+                                    )}
+                                </>
+                            )}
+                        </div>
+
                         {transferError && (
                             <div className="p-3 bg-error/10 border border-error/30 rounded-lg">
                                 <p className="text-sm text-error">{transferError}</p>
@@ -158,7 +239,7 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                     </div>
 
                     <div className="flex mt-6 gap-3">
-                        {tokenType === 'TON' && (
+                        {!gaslessEnabled && tokenType === 'TON' && (
                             <SendTonButton
                                 recipientAddress={recipientAddress}
                                 amount={amount}
@@ -179,7 +260,7 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                             </SendTonButton>
                         )}
 
-                        {tokenType === 'JETTON' && jetton?.address && (
+                        {!gaslessEnabled && tokenType === 'JETTON' && jetton?.address && (
                             <SendJettonButton
                                 jetton={{
                                     address: jetton.address,
@@ -203,6 +284,24 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                                     </Button>
                                 )}
                             </SendJettonButton>
+                        )}
+
+                        {gaslessEnabled && (
+                            <Button
+                                loading={gasless.isSending}
+                                onClick={handleGaslessSubmit}
+                                disabled={
+                                    !recipientAddress ||
+                                    !amount ||
+                                    !feeAsset ||
+                                    !gasless.quote ||
+                                    gasless.isQuoting ||
+                                    gasless.isSending
+                                }
+                                className="flex-1"
+                            >
+                                {gasless.isSending ? 'Sending…' : gasless.isQuoting ? 'Quoting…' : 'Send Gasless'}
+                            </Button>
                         )}
 
                         <Button variant="secondary" onClick={handleClose} className="flex-1">
