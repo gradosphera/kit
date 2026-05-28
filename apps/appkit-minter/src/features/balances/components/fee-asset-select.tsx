@@ -6,18 +6,11 @@
  *
  */
 
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import type { FC } from 'react';
-import {
-    Input,
-    useGaslessJettonTransferQuote,
-    useGaslessSupportedAssets,
-    useGaslessTonTransferQuote,
-    useJettonInfo,
-    useSendGaslessTransaction,
-} from '@ton/appkit-react';
-import { asAddressFriendly, compareAddress, formatUnits } from '@ton/appkit';
-import type { GaslessSendResponse, UserFriendlyAddress } from '@ton/appkit';
+import { Input, useGaslessSupportedAssets, useJettonInfo } from '@ton/appkit-react';
+import { asAddressFriendly, compareAddress } from '@ton/appkit';
+import type { UserFriendlyAddress } from '@ton/appkit';
 
 const USDT_MASTER_MAINNET = 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs';
 
@@ -41,9 +34,9 @@ interface FeeAssetSelectProps {
 
 /**
  * Fee-asset picker for gasless transfers. Lists the relayer-accepted assets and
- * preselects USDT (or the first asset) once they load. Uses a native `<select>`
- * styled with the app's design tokens — the browser-rendered dropdown handles
- * its own viewport clamping/scroll.
+ * preselects USDT (or the first asset) once they load. The native `<select>` is
+ * wrapped in `Input.Container size="s"` so the field background/border/focus
+ * state match the modal's other inputs.
  */
 export const FeeAssetSelect: FC<FeeAssetSelectProps> = ({ value, onChange, disabled }) => {
     const { data: supportedAssets, isLoading } = useGaslessSupportedAssets();
@@ -63,10 +56,6 @@ export const FeeAssetSelect: FC<FeeAssetSelectProps> = ({ value, onChange, disab
                 <Input.Title>Fee asset</Input.Title>
             </Input.Header>
             <Input.Field>
-                {/* Native select inside `Input.Field`: the container owns the
-                    field background / border / focus state, so the select itself
-                    only needs the transparent inner styling that mirrors
-                    `Input.Input`. */}
                 <select
                     className="flex-1 min-w-0 w-full bg-transparent border-none outline-none text-foreground p-0 cursor-pointer"
                     style={{
@@ -93,70 +82,4 @@ export const FeeAssetSelect: FC<FeeAssetSelectProps> = ({ value, onChange, disab
             </Input.Field>
         </Input>
     );
-};
-
-interface UseGaslessTransferParams {
-    /** Only quote/send while the gasless toggle is on. */
-    enabled: boolean;
-    tokenType: 'TON' | 'JETTON';
-    jettonAddress?: string;
-    recipientAddress: string;
-    amount: string;
-    comment?: string;
-    feeAsset: UserFriendlyAddress | null;
-}
-
-/**
- * Drives the gasless quote → send flow for the transfer modal. Quotes the
- * jetton or TON transfer (depending on `tokenType`) and exposes a formatted fee
- * plus a `send` that relays the signed quote.
- */
-export const useGaslessTransfer = ({
-    enabled,
-    tokenType,
-    jettonAddress,
-    recipientAddress,
-    amount,
-    comment,
-    feeAsset,
-}: UseGaslessTransferParams) => {
-    const hasInputs = Boolean(recipientAddress && amount && feeAsset);
-
-    const jettonQuote = useGaslessJettonTransferQuote({
-        jettonAddress: jettonAddress ?? '',
-        recipientAddress,
-        amount,
-        comment,
-        feeAsset: feeAsset ?? undefined,
-        query: { enabled: enabled && tokenType === 'JETTON' && hasInputs && Boolean(jettonAddress) },
-    });
-
-    const tonQuote = useGaslessTonTransferQuote({
-        recipientAddress,
-        amount,
-        comment,
-        feeAsset: feeAsset ?? undefined,
-        query: { enabled: enabled && tokenType === 'TON' && hasInputs },
-    });
-
-    const { data: quote, isFetching: isQuoting, error: quoteError } = tokenType === 'JETTON' ? jettonQuote : tonQuote;
-
-    const { data: feeAssetInfo } = useJettonInfo({
-        address: feeAsset ?? undefined,
-        query: { enabled: enabled && Boolean(feeAsset) },
-    });
-
-    const fee =
-        quote && feeAssetInfo?.decimals != null
-            ? `${formatUnits(quote.fee, feeAssetInfo.decimals)} ${feeAssetInfo.symbol || ''}`.trim()
-            : null;
-
-    const { mutateAsync, isPending: isSending } = useSendGaslessTransaction();
-
-    const send = useCallback(async (): Promise<GaslessSendResponse | undefined> => {
-        if (!quote) return undefined;
-        return mutateAsync({ quote });
-    }, [quote, mutateAsync]);
-
-    return { quote, quoteError, isQuoting, fee, send, isSending };
 };

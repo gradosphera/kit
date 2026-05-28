@@ -8,21 +8,14 @@
 
 import React, { useMemo, useState } from 'react';
 import type { Jetton, UserFriendlyAddress } from '@ton/appkit';
-import { getFormattedJettonInfo, getErrorMessage } from '@ton/appkit';
-import {
-    SendTonButton,
-    SendJettonButton,
-    Button,
-    Input,
-    Modal,
-    useAddress,
-    useSelectedWallet,
-} from '@ton/appkit-react';
-import { Gem } from 'lucide-react';
+import { getErrorMessage } from '@ton/appkit';
+import { Button, Input, Modal, useAddress, useTransferJetton, useTransferTon } from '@ton/appkit-react';
 
-import { FeeAssetSelect, useGaslessTransfer } from './gasless-transfer';
-
-import { TransactionStatus } from '@/features/transaction';
+import { GaslessControls } from './gasless-controls';
+import { useGaslessTransfer } from '../hooks/use-gasless-transfer';
+import { getTokenSummary } from '../utils/get-token-summary';
+import { TokenSummary } from './token-summary';
+import { TransferReceipt } from './transfer-receipt';
 
 interface TokenTransferModalProps {
     tokenType: 'TON' | 'JETTON';
@@ -48,12 +41,8 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
     const [feeAsset, setFeeAsset] = useState<UserFriendlyAddress | null>(null);
 
     const address = useAddress();
-    const [selectedWallet] = useSelectedWallet();
-    const supportsSignMessage = useMemo(() => {
-        const features = selectedWallet?.getSupportedFeatures();
-        if (features === undefined) return true;
-        return features.some((feature) => typeof feature === 'object' && feature.name === 'SignMessage');
-    }, [selectedWallet]);
+
+    const tokenInfo = useMemo(() => getTokenSummary(tokenType, tonBalance, jetton), [tokenType, tonBalance, jetton]);
 
     const gasless = useGaslessTransfer({
         enabled: gaslessEnabled,
@@ -65,33 +54,27 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
         feeAsset,
     });
 
-    const tokenInfo = useMemo(() => {
-        if (tokenType === 'TON') {
-            return {
-                name: 'Toncoin',
-                symbol: 'TON',
-                decimals: 9,
-                balance: tonBalance,
-                image: './ton.png',
-                address: null,
-            };
-        }
+    const { mutateAsync: transferTon, isPending: isTransferTonPending } = useTransferTon();
+    const { mutateAsync: transferJetton, isPending: isTransferJettonPending } = useTransferJetton();
+    const isRegularPending = tokenType === 'TON' ? isTransferTonPending : isTransferJettonPending;
+    const isPending = gaslessEnabled ? gasless.isSending : isRegularPending;
 
-        if (!jetton) {
-            throw new Error('Jetton not found');
-        }
+    const submitDisabled =
+        isPending ||
+        !recipientAddress ||
+        !amount ||
+        (tokenType === 'JETTON' && !jetton?.address) ||
+        (gaslessEnabled && (!feeAsset || !gasless.quote || gasless.isQuoting));
 
-        const jettonInfo = getFormattedJettonInfo(jetton);
-
-        return {
-            name: jettonInfo.name,
-            symbol: jettonInfo.symbol,
-            decimals: jettonInfo.decimals,
-            balance: jettonInfo.balance,
-            image: jettonInfo.image,
-            address: jettonInfo.address,
-        };
-    }, [tokenType, tonBalance, jetton]);
+    const submitText = gaslessEnabled
+        ? gasless.isSending
+            ? 'Sending…'
+            : gasless.isQuoting
+              ? 'Quoting…'
+              : 'Send Gasless'
+        : isPending
+          ? 'Sending…'
+          : `Send ${tokenInfo.symbol ?? 'Jetton'}`;
 
     const handleClose = () => {
         setRecipientAddress('');
@@ -104,11 +87,34 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
         onClose();
     };
 
-    const handleGaslessSubmit = async () => {
+    const handleSubmit = async () => {
         setTransferError(null);
         try {
-            const result = await gasless.send();
-            if (result) setTxBoc(result.boc);
+            if (gaslessEnabled) {
+                const result = await gasless.send();
+                if (result) setTxBoc(result.boc);
+                return;
+            }
+
+            if (tokenType === 'TON') {
+                const { boc } = await transferTon({ recipientAddress, amount, comment });
+                setTxBoc(boc);
+                return;
+            }
+
+            if (jetton?.address) {
+                const { boc } = await transferJetton({
+                    jettonAddress: jetton.address,
+                    recipientAddress,
+                    amount,
+                    comment,
+                    jettonDecimals: tokenInfo.decimals,
+                });
+                setTxBoc(boc);
+                return;
+            }
+
+            throw new Error('Invalid token type or missing jetton address');
         } catch (error) {
             setTransferError(getErrorMessage(error));
         }
@@ -118,33 +124,10 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
 
     return (
         <Modal title={`Transfer ${tokenInfo.name}`} open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-tertiary rounded-full flex items-center justify-center overflow-hidden">
-                    {tokenInfo.image ? (
-                        <img src={tokenInfo.image} alt={tokenInfo.name} className="w-full h-full object-cover" />
-                    ) : tokenType === 'TON' ? (
-                        <Gem className="w-6 h-6 text-primary" />
-                    ) : (
-                        <span className="text-sm font-bold text-tertiary-foreground">
-                            {tokenInfo.symbol?.slice(0, 2)}
-                        </span>
-                    )}
-                </div>
-                <div>
-                    <p className="text-sm font-medium text-foreground">Available Balance</p>
-                    <p className="text-xs text-tertiary-foreground">
-                        {tokenInfo.balance} {tokenInfo.symbol}
-                    </p>
-                </div>
-            </div>
+            <TokenSummary tokenType={tokenType} info={tokenInfo} />
 
             {txBoc ? (
-                <div className="space-y-6">
-                    <TransactionStatus boc={txBoc} />
-                    <Button fullWidth onClick={handleClose}>
-                        Close
-                    </Button>
-                </div>
+                <TransferReceipt boc={txBoc} onClose={handleClose} />
             ) : (
                 <>
                     <div className="space-y-4">
@@ -201,35 +184,14 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                             </Input.Field>
                         </Input>
 
-                        <div className="space-y-2">
-                            <label className="inline-flex items-center gap-2 text-sm text-foreground">
-                                <input
-                                    type="checkbox"
-                                    checked={gaslessEnabled}
-                                    disabled={!supportsSignMessage}
-                                    onChange={(e) => setGaslessEnabled(e.target.checked)}
-                                />
-                                <span>Gasless — pay the gas fee in another token</span>
-                            </label>
-
-                            {!supportsSignMessage && (
-                                <p className="text-xs text-tertiary-foreground">
-                                    Connected wallet does not support gasless (no SignMessage feature).
-                                </p>
-                            )}
-
-                            {gaslessEnabled && (
-                                <>
-                                    <FeeAssetSelect value={feeAsset} onChange={setFeeAsset} />
-                                    {gasless.fee && (
-                                        <p className="text-xs text-tertiary-foreground">Gas fee: {gasless.fee}</p>
-                                    )}
-                                    {gasless.quoteError && (
-                                        <p className="text-xs text-error">{getErrorMessage(gasless.quoteError)}</p>
-                                    )}
-                                </>
-                            )}
-                        </div>
+                        <GaslessControls
+                            enabled={gaslessEnabled}
+                            onEnabledChange={setGaslessEnabled}
+                            feeAsset={feeAsset}
+                            onFeeAssetChange={setFeeAsset}
+                            fee={gasless.fee}
+                            quoteError={gasless.quoteError}
+                        />
 
                         {transferError && (
                             <div className="p-3 bg-error/10 border border-error/30 rounded-lg">
@@ -239,71 +201,9 @@ export const TokenTransferModal: React.FC<TokenTransferModalProps> = ({
                     </div>
 
                     <div className="flex mt-6 gap-3">
-                        {!gaslessEnabled && tokenType === 'TON' && (
-                            <SendTonButton
-                                recipientAddress={recipientAddress}
-                                amount={amount}
-                                comment={comment}
-                                onError={(error) => setTransferError(getErrorMessage(error))}
-                                onSuccess={(data) => setTxBoc(data.boc)}
-                            >
-                                {({ isLoading, onSubmit, disabled, text }) => (
-                                    <Button
-                                        loading={isLoading}
-                                        onClick={onSubmit}
-                                        disabled={disabled}
-                                        className="flex-1"
-                                    >
-                                        {text}
-                                    </Button>
-                                )}
-                            </SendTonButton>
-                        )}
-
-                        {!gaslessEnabled && tokenType === 'JETTON' && jetton?.address && (
-                            <SendJettonButton
-                                jetton={{
-                                    address: jetton.address,
-                                    symbol: jetton.info?.symbol || 'Jetton',
-                                    decimals: tokenInfo.decimals,
-                                }}
-                                recipientAddress={recipientAddress}
-                                amount={amount}
-                                comment={comment}
-                                onError={(error) => setTransferError(getErrorMessage(error))}
-                                onSuccess={(data) => setTxBoc(data.boc)}
-                            >
-                                {({ isLoading, onSubmit, disabled, text }) => (
-                                    <Button
-                                        loading={isLoading}
-                                        onClick={onSubmit}
-                                        disabled={disabled}
-                                        className="flex-1"
-                                    >
-                                        {text}
-                                    </Button>
-                                )}
-                            </SendJettonButton>
-                        )}
-
-                        {gaslessEnabled && (
-                            <Button
-                                loading={gasless.isSending}
-                                onClick={handleGaslessSubmit}
-                                disabled={
-                                    !recipientAddress ||
-                                    !amount ||
-                                    !feeAsset ||
-                                    !gasless.quote ||
-                                    gasless.isQuoting ||
-                                    gasless.isSending
-                                }
-                                className="flex-1"
-                            >
-                                {gasless.isSending ? 'Sending…' : gasless.isQuoting ? 'Quoting…' : 'Send Gasless'}
-                            </Button>
-                        )}
-
+                        <Button loading={isPending} onClick={handleSubmit} disabled={submitDisabled} className="flex-1">
+                            {submitText}
+                        </Button>
                         <Button variant="secondary" onClick={handleClose} className="flex-1">
                             Cancel
                         </Button>
