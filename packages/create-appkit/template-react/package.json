@@ -1,5 +1,5 @@
 {
-    "name": "template",
+    "name": "appkit-template",
     "private": true,
     "version": "0.0.0",
     "type": "module",
@@ -8,23 +8,20 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "typecheck": "tsc -b --noEmit",
-        "preview": "vite preview",
-        "clean": "rm -rf dist node_modules"
+        "preview": "vite preview"
     },
     "dependencies": {
-        "@tanstack/react-query": "catalog:",
-        "@ston-fi/omniston-sdk": "^0.7.9",
-        "@ton/appkit": "workspace:*",
-        "@ton/appkit-react": "workspace:*",
-        "buffer": "catalog:",
-        "react": "catalog:",
-        "react-dom": "catalog:"
+        "@tanstack/react-query": "^5.100.14",
+        "@ton/appkit": "^1.0.0-alpha.1",
+        "@ton/appkit-react": "^1.0.0-alpha.1",
+        "buffer": "^6.0.3",
+        "react": "^19.2.3",
+        "react-dom": "^19.2.3"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "@types/node": "^25.9.1",
-        "@types/react": "catalog:",
-        "@types/react-dom": "catalog:",
+        "@types/react": "^19.2.3",
+        "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^6.0.1",
         "eslint": "^10.3.0",
         "eslint-plugin-react-hooks": "^7.1.1",
@@ -32,6 +29,6 @@
         "globals": "^17.6.0",
         "typescript": "~6.0.2",
         "typescript-eslint": "^8.59.2",
-        "vite": "catalog:"
+        "vite": "^8.0.14"
     }
 }

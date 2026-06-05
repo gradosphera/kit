@@ -73,15 +73,8 @@
     color: var(--ta-color-text);
 }
 
-.addr {
-    margin: 0;
-    font-family: var(--ta-font-family-mono);
-    font-size: var(--ta-footnote-size);
-    line-height: var(--ta-footnote-line-height);
-    color: var(--ta-color-text-tertiary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.loading {
+    color: var(--ta-color-text-secondary);
 }
 
 .nft-grid {
@@ -133,18 +126,23 @@
     color: var(--ta-color-text);
 }
 
-/* TODO(kit): drop together with src/SwapInsufficientNotice.tsx */
-.swap-notice {
-    margin-top: 0.75rem;
-    padding: 0.625rem 0.75rem;
-    border-radius: 8px;
-    background: color-mix(in srgb, var(--ta-color-accent-warning, #cc7a00) 12%, transparent);
-    color: var(--ta-color-accent-warning, #cc7a00);
+.show-more-btn {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: var(--ta-color-text-secondary);
     font-size: var(--ta-footnote-size);
     line-height: var(--ta-footnote-line-height);
+    padding: 0.5rem 0 0;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
 }
 
-/* TODO(kit): drop together with src/SwapErrorOverlay.tsx */
+.show-more-btn:hover {
+    color: var(--ta-color-text);
+}
+
 .swap-error {
     display: flex;
     align-items: flex-start;
