@@ -9,6 +9,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { FC } from 'react';
 import { Button, Modal, Switch, useNetwork, useSelectedWallet } from '@ton/appkit-react';
+import { supportsSignMessage } from '@ton/appkit';
 
 import { useMinterStore } from '../store/minter-store';
 import { enableGasless } from '../store/actions/enable-gasless';
@@ -37,10 +38,9 @@ export const MintSettingsModal: FC<MintSettingsModalProps> = ({ open, onClose })
     const network = useNetwork();
     const canEnableGasless = useCanEnableGasless();
 
-    const supportsSignMessage = useMemo(() => {
+    const hasSignMessage = useMemo(() => {
         const features = wallet?.getSupportedFeatures();
-        if (features === undefined) return true;
-        return features.some((feature) => typeof feature === 'object' && feature.name === 'SignMessage');
+        return features === undefined ? true : supportsSignMessage(features);
     }, [wallet]);
 
     const isNetworkSupported = network ? !!getMintForwardAddress(network.chainId) : false;
@@ -64,7 +64,7 @@ export const MintSettingsModal: FC<MintSettingsModalProps> = ({ open, onClose })
         onClose();
     };
 
-    const hint = !supportsSignMessage
+    const hint = !hasSignMessage
         ? 'Connected wallet does not support gasless (no SignMessage feature).'
         : !isNetworkSupported
           ? 'Gasless is not available on this network.'

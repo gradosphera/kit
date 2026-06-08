@@ -104,7 +104,12 @@ export { isValidAddress, compareAddress, asAddressFriendly } from './utils/addre
 export { withTimeout } from './utils/withTimeout';
 export { validateTransactionMessage } from './validation';
 export { createDeviceInfo, createWalletManifest, getMaxOutgoingMessages } from './utils/getDefaultWalletConfig';
-export { checkSignMessageSupport, SupportError, SupportErrorCode } from './utils/checkSignMessageSupport';
+export {
+    checkSignMessageSupport,
+    supportsSignMessage,
+    SupportError,
+    SupportErrorCode,
+} from './utils/checkSignMessageSupport';
 export type { CheckSignMessageSupportOptions } from './utils/checkSignMessageSupport';
 export { Signer } from './utils/Signer';
 export { ParseStack, SerializeStack } from './utils/tvmStack';

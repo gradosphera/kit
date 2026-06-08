@@ -8,6 +8,7 @@
 
 import { useMemo } from 'react';
 import { useNetwork, useSelectedWallet } from '@ton/appkit-react';
+import { supportsSignMessage } from '@ton/appkit';
 
 import { getMintForwardAddress } from '../constants';
 
@@ -22,13 +23,12 @@ export const useCanEnableGasless = (): boolean => {
     const [wallet] = useSelectedWallet();
     const network = useNetwork();
 
-    const supportsSignMessage = useMemo(() => {
+    const hasSignMessage = useMemo(() => {
         const features = wallet?.getSupportedFeatures();
-        if (features === undefined) return false;
-        return features.some((feature) => typeof feature === 'object' && feature.name === 'SignMessage');
+        return features === undefined ? false : supportsSignMessage(features);
     }, [wallet]);
 
     const isNetworkSupported = network ? !!getMintForwardAddress(network.chainId) : false;
 
-    return supportsSignMessage && isNetworkSupported;
+    return hasSignMessage && isNetworkSupported;
 };

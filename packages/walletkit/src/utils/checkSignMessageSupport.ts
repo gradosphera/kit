@@ -50,6 +50,19 @@ export class SupportError extends Error {
     }
 }
 
+/** Find the wallet's advertised `SignMessage` feature, if any. */
+function findSignMessageFeature(features: Feature[]): SignMessageFeature | undefined {
+    return features.find(
+        (feature): feature is SignMessageFeature =>
+            !!feature && typeof feature === 'object' && feature.name === 'SignMessage',
+    );
+}
+
+/** Whether the connected wallet advertises the `SignMessage` feature at all. */
+export function supportsSignMessage(features: Feature[]): boolean {
+    return findSignMessageFeature(features) !== undefined;
+}
+
 /**
  * Throws {@link SupportError} (with a `code` discriminating the
  * specific failure) when the connected wallet's advertised `Feature[]` cannot
@@ -58,10 +71,7 @@ export class SupportError extends Error {
  * didn't declare `maxMessages` (request may still be rejected by the wallet).
  */
 export function checkSignMessageSupport(features: Feature[], options: CheckSignMessageSupportOptions): never | void {
-    const signMessageFeature = features.find(
-        (feature): feature is SignMessageFeature =>
-            !!feature && typeof feature === 'object' && feature.name === 'SignMessage',
-    );
+    const signMessageFeature = findSignMessageFeature(features);
 
     if (!signMessageFeature) {
         throw new SupportError("Wallet doesn't support SignMessage feature.", SupportErrorCode.NotSupported);
