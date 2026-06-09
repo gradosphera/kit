@@ -15,10 +15,10 @@ Added gasless transactions support. A relayer pays the TON gas; the user pays a 
 
 - `@ton/appkit`:
     - Actions: `getGaslessConfig`, `getGaslessQuote`, `getGaslessJettonTransferQuote`, `sendGaslessTransaction`, `getGaslessProviderMetadata`, plus provider management (`getGaslessManager`, `getGaslessProvider(s)`, `setDefaultGaslessProvider`, `watchGaslessProviders`).
-    - `getGaslessJettonTransferQuote` is a convenience entry point: takes `jettonAddress`/`recipientAddress`/`amount`/`feeAsset` and builds the transfer messages for you, routing the jetton `excess` back to the relayer. The two-step quote → `sendGaslessTransaction` flow is preserved.
+    - `getGaslessJettonTransferQuote` is a convenience wrapper: takes `jettonAddress`/`recipientAddress`/`amount`/`feeAsset` and builds the transfer messages for you, routing the jetton `excess` back to the relayer. The two-step quote → `sendGaslessTransaction` flow is preserved.
     - `sendGaslessTransaction` runs fail-fast guards before prompting the wallet — throws `GaslessError(QUOTE_EXPIRED)`, `WALLET_MISMATCH`, `SIGN_MESSAGE_NOT_SUPPORTED`, or `TOO_MANY_MESSAGES` so the user is not asked to sign a quote the relayer would reject.
     - Quote queries are wallet- and network-bound: switching wallet or network refetches a fresh quote instead of serving one issued for the previous wallet.
-    - New `signMessage` action (the primitive gasless uses to sign the relayer-wrapped BoC). `TonConnectWalletAdapter` now implements `signMessage` and `getSupportedFeatures`.
+    - New `signMessage` action — signs a transaction-shaped request without broadcasting, returning a signed BoC a relayer can submit on-chain (the same `signMessage` primitive the gasless flow signs with). `TonConnectWalletAdapter` now implements `signMessage` and `getSupportedFeatures`.
     - `getSignMessageSupport` / `watchSignMessageSupport` actions — whether the selected wallet supports `SignMessage`, for gating the gasless UI (fail-closed when no wallet is connected).
 
 - `@ton/appkit-react`:
