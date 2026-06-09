@@ -4,16 +4,33 @@
     "type": "module",
     "license": "MIT",
     "description": "Scaffold a TON AppKit project",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ton-org/kit",
+        "directory": "packages/create-appkit"
+    },
+    "keywords": [
+        "ton",
+        "appkit",
+        "scaffold",
+        "create",
+        "starter",
+        "template"
+    ],
+    "engines": {
+        "node": ">=20.12.0"
+    },
     "bin": {
         "create-appkit": "dist/index.js"
     },
     "files": [
         "dist",
-        "template-*"
+        "template-*/**"
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "typecheck": "tsc -p tsconfig.json --noEmit",
+        "prepack": "pnpm build",
         "clean": "rm -rf dist node_modules"
     },
     "dependencies": {

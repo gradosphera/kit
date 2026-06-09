@@ -10,6 +10,7 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 
 import * as prompts from '@clack/prompts';
@@ -19,6 +20,7 @@ const logger = console;
 
 const RENAME_FILES: Record<string, string> = {
     _gitignore: '.gitignore',
+    _npmrc: '.npmrc',
 };
 
 const TEMPLATES = [{ name: 'react', display: 'React + TypeScript', color: 'cyan' as const }];
@@ -165,7 +167,8 @@ async function run(): Promise<void> {
         }
     }
 
-    const templateDir = path.resolve(new URL('.', import.meta.url).pathname, '..', `template-${template}`);
+    const distDir = path.dirname(fileURLToPath(import.meta.url));
+    const templateDir = path.resolve(distDir, '..', `template-${template}`);
 
     if (!fs.existsSync(templateDir)) {
         prompts.cancel(`Template "${template}" not found.`);

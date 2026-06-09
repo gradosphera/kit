@@ -1,0 +1,89 @@
+name: create-appkit test
+
+on:
+  push:
+    paths:
+      - 'packages/create-appkit/**'
+      - '.github/workflows/create-appkit-test.yml'
+  workflow_dispatch: {}
+
+jobs:
+  scaffold:
+    name: ${{ matrix.pm }} on ${{ matrix.os.name }}
+    runs-on: ${{ matrix.os.on }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - { on: ubuntu-latest, name: ubuntu }
+          - { on: macos-latest, name: macos }
+          - { on: windows-latest, name: windows }
+        pm:
+          - npm
+          - pnpm
+          - yarn
+          - bun
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Set up Yarn
+        if: matrix.pm == 'yarn'
+        run: npm install -g yarn
+
+      - name: Set up Bun
+        if: matrix.pm == 'bun'
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and pack create-appkit
+        shell: bash
+        run: |
+          pnpm --filter create-appkit run build
+          cd packages/create-appkit
+          npm pack
+          TARBALL="$(ls create-appkit-*.tgz)"
+          echo "TARBALL=$(pwd)/$TARBALL" >> "$GITHUB_ENV"
+
+      - name: Install create-appkit globally
+        shell: bash
+        run: npm install -g "$TARBALL"
+
+      - name: Scaffold a project
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        run: create-appkit my-app -y --template react --app-url https://example.com
+
+      - name: Install dependencies (${{ matrix.pm }})
+        shell: bash
+        working-directory: ${{ runner.temp }}/my-app
+        run: |
+          case "${{ matrix.pm }}" in
+            npm)  npm install ;;
+            pnpm) pnpm install ;;
+            yarn) yarn install ;;
+            bun)  bun install ;;
+          esac
+
+      - name: Build the scaffolded project (${{ matrix.pm }})
+        shell: bash
+        working-directory: ${{ runner.temp }}/my-app
+        run: |
+          case "${{ matrix.pm }}" in
+            npm)  npm run build ;;
+            pnpm) pnpm build ;;
+            yarn) yarn build ;;
+            bun)  bun run build ;;
+          esac
