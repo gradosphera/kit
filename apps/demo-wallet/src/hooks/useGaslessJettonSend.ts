@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useMemo } from 'react';
-import { isValidAddress, supportsSignMessage } from '@ton/walletkit';
+import { isValidAddress, hasSignMessageSupport } from '@ton/walletkit';
 import type { Jetton, Wallet, GaslessSupportedAsset, SendTransactionResponse } from '@ton/walletkit';
 import { useGasless } from '@demo/wallet-core';
 
@@ -59,7 +59,7 @@ export const useGaslessJettonSend = ({
 
     const hasSignMessage = useMemo(() => {
         const features = wallet?.getSupportedFeatures();
-        return features ? supportsSignMessage(features) : false;
+        return features ? hasSignMessageSupport(features) : false;
     }, [wallet]);
 
     const canUse = Boolean(jetton) && hasSignMessage;

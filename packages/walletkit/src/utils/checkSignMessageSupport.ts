@@ -59,7 +59,7 @@ function findSignMessageFeature(features: Feature[]): SignMessageFeature | undef
 }
 
 /** Whether the connected wallet advertises the `SignMessage` feature at all. */
-export function supportsSignMessage(features: Feature[]): boolean {
+export function hasSignMessageSupport(features: Feature[]): boolean {
     return findSignMessageFeature(features) !== undefined;
 }
 

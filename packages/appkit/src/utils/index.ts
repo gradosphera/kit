@@ -15,7 +15,7 @@ export {
     asBase64,
     asHex,
     checkSignMessageSupport,
-    supportsSignMessage,
+    hasSignMessageSupport,
     SupportError,
     SupportErrorCode,
     type CheckSignMessageSupportOptions,

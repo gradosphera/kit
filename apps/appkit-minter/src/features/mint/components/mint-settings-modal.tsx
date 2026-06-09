@@ -6,15 +6,13 @@
  *
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FC } from 'react';
-import { Button, Modal, Switch, useNetwork, useSelectedWallet } from '@ton/appkit-react';
-import { supportsSignMessage } from '@ton/appkit';
+import { Button, Modal, Switch } from '@ton/appkit-react';
 
 import { useMinterStore } from '../store/minter-store';
 import { enableGasless } from '../store/actions/enable-gasless';
 import { setGaslessEnabled } from '../store/actions/set-gasless-enabled';
-import { getMintForwardAddress } from '../constants';
 import { useCanEnableGasless } from '../hooks/use-can-enable-gasless';
 
 interface MintSettingsModalProps {
@@ -34,16 +32,7 @@ interface MintSettingsModalProps {
 export const MintSettingsModal: FC<MintSettingsModalProps> = ({ open, onClose }) => {
     const gaslessEnabled = useMinterStore((state) => state.gaslessEnabled);
 
-    const [wallet] = useSelectedWallet();
-    const network = useNetwork();
-    const canEnableGasless = useCanEnableGasless();
-
-    const hasSignMessage = useMemo(() => {
-        const features = wallet?.getSupportedFeatures();
-        return features === undefined ? true : supportsSignMessage(features);
-    }, [wallet]);
-
-    const isNetworkSupported = network ? !!getMintForwardAddress(network.chainId) : false;
+    const { canEnable, hasSignMessage, isNetworkSupported } = useCanEnableGasless();
 
     const [stagedEnabled, setStagedEnabled] = useState(gaslessEnabled);
 
@@ -78,7 +67,7 @@ export const MintSettingsModal: FC<MintSettingsModalProps> = ({ open, onClose })
                         <div className="text-base text-foreground">Gasless</div>
                         <div className="text-xs text-tertiary-foreground">Pay the fee in a jetton instead of TON.</div>
                     </div>
-                    <Switch checked={stagedEnabled} onCheckedChange={setStagedEnabled} disabled={!canEnableGasless} />
+                    <Switch checked={stagedEnabled} onCheckedChange={setStagedEnabled} disabled={!canEnable} />
                 </div>
 
                 {hint && <p className="text-xs text-tertiary-foreground">{hint}</p>}

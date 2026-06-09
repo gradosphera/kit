@@ -6,10 +6,9 @@
  *
  */
 
-import { useMemo } from 'react';
 import type { FC } from 'react';
-import { useSelectedWallet } from '@ton/appkit-react';
-import { getErrorMessage, supportsSignMessage } from '@ton/appkit';
+import { useSignMessageSupport } from '@ton/appkit-react';
+import { getErrorMessage } from '@ton/appkit';
 import type { UserFriendlyAddress } from '@ton/appkit';
 
 import { FeeAssetSelect } from './fee-asset-select';
@@ -37,11 +36,7 @@ export const GaslessControls: FC<GaslessControlsProps> = ({
     fee,
     quoteError,
 }) => {
-    const [selectedWallet] = useSelectedWallet();
-    const hasSignMessage = useMemo(() => {
-        const features = selectedWallet?.getSupportedFeatures();
-        return features === undefined ? true : supportsSignMessage(features);
-    }, [selectedWallet]);
+    const hasSignMessage = useSignMessageSupport();
 
     return (
         <div className="space-y-2">

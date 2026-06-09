@@ -107,7 +107,7 @@ export { validateTransactionMessage } from './validation';
 export { createDeviceInfo, createWalletManifest, getMaxOutgoingMessages } from './utils/getDefaultWalletConfig';
 export {
     checkSignMessageSupport,
-    supportsSignMessage,
+    hasSignMessageSupport,
     SupportError,
     SupportErrorCode,
 } from './utils/checkSignMessageSupport';
