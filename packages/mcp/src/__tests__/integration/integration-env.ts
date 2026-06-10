@@ -14,11 +14,11 @@ const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '
 
 /**
  * Pre-provisioned testnet contracts: the wallet derived from
- * TON_MCP_INTEGRATION_MNEMONIC owns the jetton balance and the NFT item,
+ * WALLET_MNEMONIC owns the jetton balance and the NFT item,
  * and its key is the operator key of the agentic wallet.
  */
 export const TESTNET_FIXTURES = {
-    walletAddress: 'UQBzDgiMxF2HN9dxUVXfaYmEBqwm8QLbzkTzIV8rCF6qp_-p',
+    walletAddress: 'UQCtUECerw6Da0-JXf0qC8ltXdimfTKm8dR64Yt_R29JAIiV',
     agenticWalletAddress: '0QAiM-UoaiPQJvGoJrTMmsaBxyZfviUepynP9hoSo5-H2hkq',
     agenticCollectionAddress: 'kQByQ19qvWxW7VibSbGEgZiYMqilHY5y1a_eeSL2VaXhf5ax',
     jettonMasterAddress: 'kQD0GKBM8ZbryVk2aESmzfU6b9b_8era_IkvBSELujFZPsyy',
@@ -42,7 +42,7 @@ function loadLocalEnvFile(): void {
 
 export function getIntegrationMnemonic(): string | undefined {
     loadLocalEnvFile();
-    const value = process.env.TON_MCP_INTEGRATION_MNEMONIC?.trim();
+    const value = process.env.WALLET_MNEMONIC?.trim();
     if (!value || value.split(/\s+/).length < 12) {
         return undefined;
     }

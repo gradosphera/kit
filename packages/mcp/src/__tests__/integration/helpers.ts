@@ -26,7 +26,7 @@ export function useHarness(walletVersion: 'v4r2' | 'agentic'): () => Integration
     beforeAll(async () => {
         const mnemonic = getIntegrationMnemonic();
         if (!mnemonic) {
-            throw new Error('TON_MCP_INTEGRATION_MNEMONIC is not set');
+            throw new Error('WALLET_MNEMONIC is not set');
         }
         harness = await createIntegrationHarness({ mnemonic, walletVersion });
     });
