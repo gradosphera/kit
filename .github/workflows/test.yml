@@ -65,6 +65,10 @@ jobs:
     - name: Set up dependencies
       run: pnpm i --frozen-lockfile
 
+    # The tests import @ton/walletkit, whose entry points live in dist/.
+    - name: Build workspace dependencies
+      run: pnpm turbo build --filter=@ton/mcp^...
+
     # The suite skips itself when TON_MCP_INTEGRATION_MNEMONIC is not set (e.g. on forks).
     - name: MCP integration tests (testnet, emulated sends)
       run: pnpm --filter @ton/mcp test:integration
