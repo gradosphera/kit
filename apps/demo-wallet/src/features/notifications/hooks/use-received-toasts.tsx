@@ -13,7 +13,7 @@ import { useJettons, useRates, useWallet } from '@demo/wallet-core';
 import type { RateEntry } from '@demo/wallet-core';
 
 import { getJettonsSymbol } from '@/features/jettons';
-import { formatAmount, formatUsd, toDecimal } from '@/core/utils';
+import { formatLargeValue, toDecimal } from '@/core/utils';
 
 const TON_KEY = 'TON';
 const TON_DECIMALS = 9;
@@ -34,8 +34,8 @@ const ReceivedIcon = (
 );
 
 const toastReceived = (amount: number, symbol: string, rate?: number): void => {
-    const fiat = rate ? ` (${formatUsd(amount * rate)})` : '';
-    toast(`You received ${formatAmount(amount)} ${symbol}${fiat}`.trim(), { icon: ReceivedIcon });
+    const fiat = rate ? ` ($${formatLargeValue(String(amount * rate), 2, 2)})` : '';
+    toast(`You received ${formatLargeValue(String(amount), 4)} ${symbol}${fiat}`.trim(), { icon: ReceivedIcon });
 };
 
 /**

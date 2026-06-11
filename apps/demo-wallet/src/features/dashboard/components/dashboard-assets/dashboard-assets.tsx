@@ -41,7 +41,6 @@ interface AssetRowData {
     amount: number;
     rateLabel?: string;
     fiat?: number;
-    change24h?: number;
 }
 
 export const DashboardAssets: React.FC = () => {
@@ -91,7 +90,6 @@ export const DashboardAssets: React.FC = () => {
             amount,
             rateLabel: rateEntry ? formatRate(rateEntry.rate) : undefined,
             fiat: rateEntry ? amount * rateEntry.rate : undefined,
-            change24h: rateEntry?.change24h,
         };
     }, [assetsReady, balance, rates]);
 
@@ -114,7 +112,6 @@ export const DashboardAssets: React.FC = () => {
                     amount,
                     rateLabel: rateEntry ? formatRate(rateEntry.rate) : undefined,
                     fiat,
-                    change24h: rateEntry?.change24h,
                 } satisfies AssetRowData,
                 isVerified: jetton.isVerified,
                 hasRate: Boolean(rateEntry),
@@ -164,7 +161,6 @@ export const DashboardAssets: React.FC = () => {
                     amount,
                     rateLabel: rateEntry ? formatRate(rateEntry.rate) : undefined,
                     fiat: rateEntry ? amount * rateEntry.rate : undefined,
-                    change24h: rateEntry?.change24h,
                 });
             }
         }

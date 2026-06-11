@@ -10,7 +10,7 @@ import React from 'react';
 
 import { FallbackImage } from '@/core/components/ui/fallback-image';
 import { useCountUp } from '@/core/hooks/use-count-up';
-import { formatAmount, formatPercent, formatUsd } from '@/core/utils';
+import { formatLargeValue } from '@/core/utils';
 
 interface DashboardAssetRowProps {
     /** One or more candidate icon URLs, tried in order until one loads. */
@@ -22,14 +22,7 @@ interface DashboardAssetRowProps {
     rateLabel?: string;
     /** Fiat value to display on the right; omit to hide (asset has no rate). */
     fiat?: number;
-    change24h?: number;
 }
-
-const changeColor = (value: number): string => {
-    if (value > 0) return 'text-green-500';
-    if (value < 0) return 'text-red-500';
-    return 'text-gray-400';
-};
 
 export const DashboardAssetRow: React.FC<DashboardAssetRowProps> = ({
     icon,
@@ -39,7 +32,6 @@ export const DashboardAssetRow: React.FC<DashboardAssetRowProps> = ({
     amount,
     rateLabel,
     fiat,
-    change24h,
 }) => {
     const animatedAmount = useCountUp(amount);
     const animatedFiat = useCountUp(fiat ?? 0);
@@ -62,16 +54,15 @@ export const DashboardAssetRow: React.FC<DashboardAssetRowProps> = ({
             <div className="flex-1 min-w-0">
                 <div className="text-sm font-semibold text-gray-900 truncate">{name}</div>
                 <div className="text-xs text-gray-500 truncate tabular-nums">
-                    {formatAmount(animatedAmount)} {symbol}
+                    {formatLargeValue(String(animatedAmount), 4)} {symbol}
                     {rateLabel && ` · ${rateLabel}`}
                 </div>
             </div>
-            {(hasFiat || change24h !== undefined) && (
+            {hasFiat && (
                 <div className="text-right flex-shrink-0 tabular-nums">
-                    {hasFiat && <div className="text-sm font-semibold text-gray-900">{formatUsd(animatedFiat)}</div>}
-                    {change24h !== undefined && (
-                        <div className={`text-xs ${changeColor(change24h)}`}>{formatPercent(change24h)}</div>
-                    )}
+                    <div className="text-sm font-semibold text-gray-900">
+                        ${formatLargeValue(String(animatedFiat), 2, 2)}
+                    </div>
                 </div>
             )}
         </div>

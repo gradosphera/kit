@@ -12,7 +12,15 @@ import { toast } from 'sonner';
 import { useWallet, useJettons, useRates } from '@demo/wallet-core';
 
 import { useCountUp } from '@/core/hooks/use-count-up';
-import { findRate, formatUsdParts, shortenAddress, toDecimal } from '@/core/utils';
+import { findRate, shortenAddress, toDecimal } from '@/core/utils';
+
+const usdFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+/** USD value split into integer and fraction parts (no `$`), for the styled total. */
+const formatUsdParts = (value: number): { intPart: string; fracPart: string } => {
+    const [intPart, fracPart = '00'] = usdFormat.format(value).split('.');
+    return { intPart, fracPart };
+};
 
 const TON_DECIMALS = 9;
 
