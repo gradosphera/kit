@@ -11,7 +11,12 @@ import { expect } from '@playwright/test';
 import { testWithGaslessFixture, connectWallet } from '../fixtures/gaslessFixture';
 import { DEFAULT_RECIPIENT, TRANSFER_AMOUNT } from '../constants';
 import { gaslessMeta } from '../qa/allure-meta';
-import { mockGaslessConfig, mockGaslessEstimateOk, mockGaslessSendSequence, USDT_MASTER } from '../mocks/gaslessRelayer';
+import {
+    mockGaslessConfig,
+    mockGaslessEstimateOk,
+    mockGaslessSendSequence,
+    USDT_MASTER,
+} from '../mocks/gaslessRelayer';
 import type { SendCapture } from '../mocks/gaslessRelayer';
 
 /**

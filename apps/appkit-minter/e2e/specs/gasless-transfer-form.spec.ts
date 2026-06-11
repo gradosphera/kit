@@ -145,7 +145,12 @@ test.describe('Gasless transfer form — states', () => {
         });
     });
 
-    test('Send shows "Quoting…" while the estimate is in flight, then settles', async ({ app, minter, widget, wallet }) => {
+    test('Send shows "Quoting…" while the estimate is in flight, then settles', async ({
+        app,
+        minter,
+        widget,
+        wallet,
+    }) => {
         await gaslessMeta('Transfer', '§4.2');
         await mockGaslessConfig(app, { assets: [USDT_MASTER] });
         await mockGaslessEstimateOk(app, { delayMs: 4000 }); // slow quote → observable "Quoting…"

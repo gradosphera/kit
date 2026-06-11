@@ -52,14 +52,14 @@ case scenarios in TestOps.
 
 Why code-defined (vs. describing steps directly in TestOps):
 
-| | Code-defined steps (chosen) | TestOps-authored steps |
-|---|---|---|
-| Source of truth | the spec — one place | the case — diverges from code |
-| Drift | impossible (steps come from the run) | constant (manual sync) |
-| New test | appears in TestOps after one run | must be hand-created first |
-| Matches repo | yes — demo-wallet/walletkit do this (`allureId`/`suite`/`label` in code) | no |
-| Cost for ~60 cases | zero extra | ~60 manual cases to write + maintain |
-| Rich "expected result" rows | weaker (body steps) | richer |
+|                             | Code-defined steps (chosen)                                              | TestOps-authored steps               |
+| --------------------------- | ------------------------------------------------------------------------ | ------------------------------------ |
+| Source of truth             | the spec — one place                                                     | the case — diverges from code        |
+| Drift                       | impossible (steps come from the run)                                     | constant (manual sync)               |
+| New test                    | appears in TestOps after one run                                         | must be hand-created first           |
+| Matches repo                | yes — demo-wallet/walletkit do this (`allureId`/`suite`/`label` in code) | no                                   |
+| Cost for ~60 cases          | zero extra                                                               | ~60 manual cases to write + maintain |
+| Rich "expected result" rows | weaker (body steps)                                                      | richer                               |
 
 The only real downside — slightly less rich step formatting — is outweighed by
 zero drift across a fast-moving feature. `detail: false` in the Allure reporter
@@ -108,12 +108,12 @@ WALLET_MNEMONIC="word1 word2 …" pnpm --filter appkit-minter e2e -- --grep "@re
 
 Useful env vars:
 
-| Var | Purpose |
-|-----|---------|
-| `WALLET_MNEMONIC` | seed imported into the demo wallet (two-tab specs); signs locally |
-| `MINTER_URL` | run against an already-running minter / deployed preview instead of the dev server |
+| Var                 | Purpose                                                                                                                       |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `WALLET_MNEMONIC`   | seed imported into the demo wallet (two-tab specs); signs locally                                                             |
+| `MINTER_URL`        | run against an already-running minter / deployed preview instead of the dev server                                            |
 | `E2E_WALLET_SOURCE` | demo-wallet URL for the wallet tab (default `http://localhost:5173/`); set to a non-`localhost:5173` value to skip booting it |
-| `ENABLE_HEADLESS` | `true`/`false` to force headless |
+| `ENABLE_HEADLESS`   | `true`/`false` to force headless                                                                                              |
 
 ## CI
 

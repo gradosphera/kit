@@ -72,12 +72,7 @@ test.describe('Gasless jetton transfer', () => {
         });
     });
 
-    test('Sign rejection in the wallet — form recovers, error is shown', async ({
-        app,
-        minter,
-        widget,
-        wallet,
-    }) => {
+    test('Sign rejection in the wallet — form recovers, error is shown', async ({ app, minter, widget, wallet }) => {
         await gaslessMeta('Transfer', '§6.3');
         await mockGaslessConfig(app, { assets: [USDT_MASTER] });
         await mockGaslessEstimateOk(app);

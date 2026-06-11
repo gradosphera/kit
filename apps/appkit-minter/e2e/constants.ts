@@ -19,8 +19,7 @@ export const USDT_MASTER_MAINNET = 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id
  * broadcast), set E2E_RECIPIENT to a real address you control — never send to
  * the zero address for real.
  */
-export const DEFAULT_RECIPIENT =
-    process.env.E2E_RECIPIENT ?? 'UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ';
+export const DEFAULT_RECIPIENT = process.env.E2E_RECIPIENT ?? 'UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ';
 
 /** Small jetton amount used in transfer tests. */
 export const TRANSFER_AMOUNT = '0.05';

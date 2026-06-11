@@ -63,7 +63,7 @@ jobs:
       - name: Run appkit-minter e2e (exclude real-send)
         run: |
           cd apps/appkit-minter
-          xvfb-run pnpm e2e -- --grep-invert "@real-send"
+          xvfb-run npx playwright test --config e2e.config.ts --retries=3 --grep-invert "@real-send"
         env:
           # SignMessage-capable demo wallet imported by the two-tab fixture. Used
           # only to sign locally — the relayer is mocked, so no funds are spent.

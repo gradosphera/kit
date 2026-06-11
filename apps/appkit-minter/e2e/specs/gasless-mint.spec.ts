@@ -7,7 +7,6 @@
  */
 
 import { test as base, expect } from '../qa/test-base';
-
 import { testWithGaslessFixture, connectWallet } from '../fixtures/gaslessFixture';
 import { MinterPage } from '../pages/MinterPage';
 import { mockGaslessConfig, mockGaslessEstimateOk, USDT_MASTER } from '../mocks/gaslessRelayer';

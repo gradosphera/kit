@@ -22,11 +22,17 @@ export class MinterPage {
     // ---- navigation ----
 
     async gotoMint(): Promise<void> {
-        await this.page.getByRole('button', { name: /^Mint$/ }).first().click();
+        await this.page
+            .getByRole('button', { name: /^Mint$/ })
+            .first()
+            .click();
     }
 
     async gotoJettons(): Promise<void> {
-        await this.page.getByRole('button', { name: /^Jettons$/ }).first().click();
+        await this.page
+            .getByRole('button', { name: /^Jettons$/ })
+            .first()
+            .click();
     }
 
     // ---- transfer modal ----
@@ -72,7 +78,10 @@ export class MinterPage {
 
     /** The primary send button — "Send {symbol}" / "Send Gasless" / "Quoting…" / "Sending…". */
     get sendButton(): Locator {
-        return this.page.locator('button').filter({ hasText: /Send |Quoting|Sending/i }).first();
+        return this.page
+            .locator('button')
+            .filter({ hasText: /Send |Quoting|Sending/i })
+            .first();
     }
 
     async enableGasless(): Promise<void> {
@@ -109,7 +118,10 @@ export class MinterPage {
         // The generator button reads "Generate card" with no card and "Generate new
         // card" once one exists (the minter seeds/persists a card across loads), so
         // match either. A card being present is confirmed by the gear button showing.
-        await this.page.getByRole('button', { name: /Generate (new )?card/i }).first().click();
+        await this.page
+            .getByRole('button', { name: /Generate (new )?card/i })
+            .first()
+            .click();
         await this.mintSettingsButton.waitFor({ state: 'visible' });
     }
 
@@ -148,7 +160,10 @@ export class MinterPage {
         if (isOn !== enabled && !(await sw.isDisabled())) {
             await sw.click();
         }
-        await this.page.getByRole('button', { name: /^Save$/ }).first().click();
+        await this.page
+            .getByRole('button', { name: /^Save$/ })
+            .first()
+            .click();
     }
 
     /** Opens the Confirm-mint dialog. Assumes a card has been generated and a wallet connected. */
@@ -203,7 +218,10 @@ export class MinterPage {
         for (let i = 0; i < 4; i++) {
             const cancel = this.page.getByRole('button', { name: /^Close$|^Cancel$|^Done$/ });
             if (await cancel.count()) {
-                await cancel.first().click().catch(() => undefined);
+                await cancel
+                    .first()
+                    .click()
+                    .catch(() => undefined);
             } else {
                 await this.page.keyboard.press('Escape').catch(() => undefined);
             }

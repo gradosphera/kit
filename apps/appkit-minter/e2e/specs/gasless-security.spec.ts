@@ -19,6 +19,7 @@ import {
 } from '../mocks/gaslessRelayer';
 import type { SendCapture } from '../mocks/gaslessRelayer';
 import { gaslessMeta } from '../qa/allure-meta';
+import type { MinterPage } from '../pages/MinterPage';
 
 /**
  * §6 / §11 — relayer-error handling, driven by mocking the gasless endpoints.
@@ -35,7 +36,7 @@ const test = testWithGaslessFixture({
     appUrl: process.env.MINTER_URL ?? 'http://localhost:5174/',
 });
 
-async function openGaslessTransfer(minter: import('../pages/MinterPage').MinterPage) {
+async function openGaslessTransfer(minter: MinterPage) {
     await minter.openTransfer('Tether USD');
     await minter.enableGasless();
     await minter.fillTransfer(DEFAULT_RECIPIENT, TRANSFER_AMOUNT);
@@ -73,16 +74,14 @@ test.describe('Relayer error handling (two-tab wallet, mocked relayer)', () => {
         });
     });
 
-    test('Estimate HTTP 400 — quote error shown, send stays blocked', async ({
-        app,
-        minter,
-        widget,
-        wallet,
-    }) => {
+    test('Estimate HTTP 400 — quote error shown, send stays blocked', async ({ app, minter, widget, wallet }) => {
         await gaslessMeta('Relayer errors', '§6.1');
         await test.step('Mock config and estimate error (HTTP 400)', async () => {
             await mockGaslessConfig(app, { assets: [USDT_MASTER] });
-            await mockGaslessEstimateError(app, { status: 400, body: { error: 'Jetton is not supported.', error_code: 40000 } });
+            await mockGaslessEstimateError(app, {
+                status: 400,
+                body: { error: 'Jetton is not supported.', error_code: 40000 },
+            });
         });
         await test.step('Connect Wallet and open the Gasless transfer', async () => {
             await connectWallet({ widget, wallet });
@@ -119,12 +118,7 @@ test.describe('Relayer error handling (two-tab wallet, mocked relayer)', () => {
         });
     });
 
-    test('Send HTTP 500 — error shown, form recovers (quote re-requested)', async ({
-        app,
-        minter,
-        widget,
-        wallet,
-    }) => {
+    test('Send HTTP 500 — error shown, form recovers (quote re-requested)', async ({ app, minter, widget, wallet }) => {
         await gaslessMeta('Relayer errors', '§6.5');
         const capture: SendCapture = { requests: [] };
         await test.step('Mock config, a successful estimate and a send error (HTTP 500)', async () => {

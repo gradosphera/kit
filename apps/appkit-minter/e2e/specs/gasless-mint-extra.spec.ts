@@ -43,12 +43,7 @@ test.describe('Gasless Mint — additional states', () => {
         });
     });
 
-    test('Gasless setting persists when mint settings are reopened', async ({
-        app,
-        minter,
-        widget,
-        wallet,
-    }) => {
+    test('Gasless setting persists when mint settings are reopened', async ({ app, minter, widget, wallet }) => {
         await gaslessMeta('Mint', '§9.16');
         await mockGaslessConfig(app, { assets: [USDT_MASTER] });
         await mockGaslessEstimateOk(app);

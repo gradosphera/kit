@@ -7,7 +7,6 @@
  */
 
 import { test as base, expect } from '../qa/test-base';
-
 import { testWithGaslessFixture, connectWallet } from '../fixtures/gaslessFixture';
 import { MinterPage } from '../pages/MinterPage';
 import { gaslessMeta } from '../qa/allure-meta';
@@ -57,11 +56,7 @@ test.describe('Availability (two-tab wallet)', () => {
         });
     });
 
-    test('Jetton transfer — Gasless checkbox enabled for a SignMessage wallet', async ({
-        minter,
-        widget,
-        wallet,
-    }) => {
+    test('Jetton transfer — Gasless checkbox enabled for a SignMessage wallet', async ({ minter, widget, wallet }) => {
         await gaslessMeta('Availability', '§1.2/§1.5');
         await test.step('Connect wallet and open USDT transfer', async () => {
             await connectWallet({ widget, wallet });
