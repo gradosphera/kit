@@ -31,25 +31,29 @@ export const useWalletDataUpdater = () => {
         void Promise.allSettled([updateBalance(), loadUserJettons(), loadUserNfts()]);
     }, [address, updateBalance, loadUserJettons, loadUserNfts, clearNfts, clearJettons]);
 
-    // Periodic refresh for balances
+    // Periodic refresh: balances, jettons and NFTs sequentially to avoid overloading the backend
     useEffect(() => {
         if (!address) return;
 
-        const interval = setInterval(() => {
-            void Promise.allSettled([updateBalance(), loadUserJettons()]);
-        }, 15_000);
+        let cancelled = false;
+        let timeout: ReturnType<typeof setTimeout>;
+        const refreshInterval = 20_000;
 
-        return () => clearInterval(interval);
-    }, [address, updateBalance, loadUserJettons]);
+        const tick = async () => {
+            await updateBalance().catch(() => {});
+            if (cancelled) return;
+            await loadUserJettons().catch(() => {});
+            if (cancelled) return;
+            await refreshNfts().catch(() => {});
+            if (cancelled) return;
+            timeout = setTimeout(() => void tick(), refreshInterval);
+        };
 
-    // Periodic refresh for NFTs
-    useEffect(() => {
-        if (!address) return;
+        timeout = setTimeout(() => void tick(), refreshInterval);
 
-        const timeout = setInterval(() => {
-            void refreshNfts();
-        }, 30_000);
-
-        return () => clearInterval(timeout);
-    }, [address, refreshNfts]);
+        return () => {
+            cancelled = true;
+            clearTimeout(timeout);
+        };
+    }, [address, updateBalance, loadUserJettons, refreshNfts]);
 };
