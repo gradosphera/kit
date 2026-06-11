@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { useWallet, useJettons, useRates } from '@demo/wallet-core';
 
 import { useCountUp } from '@/core/hooks/use-count-up';
-import { findRate, formatUsdParts, shortenAddress, toDecimal } from '@/utils';
+import { findRate, formatUsdParts, shortenAddress, toDecimal } from '@/core/utils';
 
 const TON_DECIMALS = 9;
 

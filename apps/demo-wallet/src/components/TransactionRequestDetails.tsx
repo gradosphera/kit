@@ -11,9 +11,10 @@ import type { StructuredItem, TransactionRequest, TransactionRequestMessage } fr
 import { getAddressExplorerUrls } from '@demo/wallet-core';
 
 import { useActiveWalletNetwork, useJettonInfo } from '../hooks/useJettonInfo';
-import { normalizeAddress, shortenAddress } from '../utils/formatters';
-import { decodeTextCommentPayload } from '../utils/payload';
-import { formatNanoTonAmount, formatTokenAmount } from '../utils/units';
+
+import { normalizeAddress, shortenAddress } from '@/core/utils/formatters';
+import { decodeTextCommentPayload } from '@/core/utils/payload';
+import { formatNanoTonAmount, formatTokenAmount } from '@/core/utils/units';
 
 interface TransactionRequestDetailsProps {
     request: TransactionRequest;

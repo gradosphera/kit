@@ -13,7 +13,7 @@ import { getNetworkLabel } from '@demo/wallet-core';
 import type { SavedWallet } from '@demo/wallet-core';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/core/components/ui/popover';
-import { shortenAddress } from '@/utils';
+import { shortenAddress } from '@/core/utils';
 
 const networkBadgeClass = (network: SavedWallet['network']): string => {
     if (network === 'mainnet') return 'bg-green-100 text-green-800';

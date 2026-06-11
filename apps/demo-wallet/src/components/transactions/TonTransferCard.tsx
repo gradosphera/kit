@@ -10,8 +10,8 @@ import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import type { TonTransferAction } from '@ton/walletkit';
 
-import { shortenAddress, formatTimestamp } from '../../utils';
-import { formatTon } from '../../utils/units';
+import { shortenAddress, formatTimestamp } from '@/core/utils';
+import { formatTon } from '@/core/utils/units';
 
 interface TonTransferCardProps {
     action: TonTransferAction;

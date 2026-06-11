@@ -11,7 +11,7 @@ import React from 'react';
 import { FallbackImage } from './FallbackImage';
 
 import { useCountUp } from '@/core/hooks/use-count-up';
-import { formatAmount, formatPercent, formatUsd } from '@/utils';
+import { formatAmount, formatPercent, formatUsd } from '@/core/utils';
 
 interface DashboardAssetRowProps {
     /** One or more candidate icon URLs, tried in order until one loads. */

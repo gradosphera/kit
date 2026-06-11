@@ -13,9 +13,10 @@ import { useWalletStore } from '@demo/wallet-core';
 import { Base64ToHex } from '@ton/walletkit';
 import type { Event, Action } from '@ton/walletkit';
 
-import { formatTonForDisplay, getTonviewerTxUrl, sameAddress } from '../utils';
 import { TraceRow } from './TraceRow';
 import { TransactionErrorState, TransactionLoadingState, TransactionEmptyState, ActionCard } from './transactions';
+
+import { formatTonForDisplay, getTonviewerTxUrl, sameAddress } from '@/core/utils';
 
 interface RecentTransactionsProps {
     embedded?: boolean;

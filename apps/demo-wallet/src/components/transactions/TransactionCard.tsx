@@ -9,7 +9,7 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { formatTimestamp } from '../../utils';
+import { formatTimestamp } from '@/core/utils';
 
 export type TxFinality = 'pending' | 'confirmed' | 'finalized' | 'invalidated' | 'done';
 

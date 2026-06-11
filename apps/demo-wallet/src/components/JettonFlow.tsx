@@ -11,7 +11,8 @@ import type { Address } from '@ton/core';
 import type { TransactionTraceMoneyFlowItem } from '@ton/walletkit';
 
 import { resolveTokenAddress, TON_INFO, useJettonInfo } from '../hooks/useJettonInfo';
-import { formatUnits } from '../utils/units';
+
+import { formatUnits } from '@/core/utils/units';
 
 export const JettonNameDisplay = memo(function JettonNameDisplay({
     jettonAddress,

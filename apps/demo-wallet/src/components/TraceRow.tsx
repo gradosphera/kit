@@ -12,7 +12,7 @@ import { useShallow } from 'zustand/react/shallow';
 import type { ToncenterTraceItem } from '@ton/walletkit';
 import { useWalletKit, useWalletStore, getChainNetwork } from '@demo/wallet-core';
 
-import { getTonviewerTxUrl } from '@/utils';
+import { getTonviewerTxUrl } from '@/core/utils';
 import { log } from '@/utils/logger';
 
 // Local type definitions for transaction data

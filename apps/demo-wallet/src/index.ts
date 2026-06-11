@@ -10,7 +10,7 @@
 export * from './components';
 export * from './pages';
 export * from './hooks';
-export * from './utils';
+export * from '@/core/utils';
 
 // For convenience, also export the main App component
 export { default as App } from './App';

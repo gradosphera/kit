@@ -14,7 +14,7 @@ import type { JettonInfo } from '@ton/walletkit';
 import { DashboardAssetRow, DashboardAssetRowSkeleton } from './DashboardAssetRow';
 
 import { getJettonsName, getJettonsSymbol } from '@/utils/jetton';
-import { findRate, formatRate, toDecimal } from '@/utils';
+import { findRate, formatRate, toDecimal } from '@/core/utils';
 
 const TON_DECIMALS = 9;
 const JETTON_SLOTS = 2;

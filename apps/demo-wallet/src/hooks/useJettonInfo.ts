@@ -12,7 +12,7 @@ import type { JettonInfo } from '@ton/walletkit';
 import { getChainNetwork, useWalletKit, useWalletStore } from '@demo/wallet-core';
 import type { NetworkType } from '@demo/wallet-core';
 
-import { normalizeAddress } from '../utils/formatters';
+import { normalizeAddress } from '@/core/utils/formatters';
 
 export type TokenInfo = Partial<Omit<JettonInfo, 'decimals'>> & {
     decimals?: number;

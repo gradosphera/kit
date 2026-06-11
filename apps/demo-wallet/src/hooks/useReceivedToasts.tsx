@@ -13,7 +13,7 @@ import { useJettons, useRates, useWallet } from '@demo/wallet-core';
 import type { RateEntry } from '@demo/wallet-core';
 
 import { getJettonsSymbol } from '@/utils/jetton';
-import { formatAmount, formatUsd, toDecimal } from '@/utils';
+import { formatAmount, formatUsd, toDecimal } from '@/core/utils';
 
 const TON_KEY = 'TON';
 const TON_DECIMALS = 9;

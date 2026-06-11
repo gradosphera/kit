@@ -12,7 +12,7 @@ import type { Jetton, Wallet, GaslessSupportedAsset, SendTransactionResponse } f
 import { useGasless } from '@demo/wallet-core';
 
 import { useJettonInfo } from '@/hooks/useJettonInfo';
-import { formatUnits, parseUnits } from '@/utils/units';
+import { formatUnits, parseUnits } from '@/core/utils/units';
 
 const QUOTE_DEBOUNCE_MS = 400;
 

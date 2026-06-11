@@ -10,7 +10,7 @@ import { useCallback } from 'react';
 import { toast } from 'sonner';
 import type { ITonWalletKit, Jetton, SendTransactionResponse, Wallet } from '@ton/walletkit';
 
-import { parseUnits } from '@/utils/units';
+import { parseUnits } from '@/core/utils/units';
 import { useGaslessJettonSend } from '@/hooks/useGaslessJettonSend';
 import type { UseGaslessJettonSendResult } from '@/hooks/useGaslessJettonSend';
 
