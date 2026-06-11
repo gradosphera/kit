@@ -11,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronRight, KeyRound, Lock, Plus, Trash2 } from 'lucide-react';
 import { useAuth, useWallet } from '@demo/wallet-core';
 
-import { MnemonicDisplay } from './MnemonicDisplay';
-import { ToggleRow } from './ToggleRow';
+import { ToggleRow } from '../toggle-row';
 
+import { MnemonicDisplay } from '@/components/MnemonicDisplay';
 import { createComponentLogger } from '@/core/lib/logger';
 import { Modal } from '@/core/components/ui/modal';
 import { SettingsIcon } from '@/core/components/ui/icons';

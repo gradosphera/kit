@@ -17,11 +17,9 @@ export { DashboardAssetRow, DashboardAssetRowSkeleton } from './DashboardAssetRo
 export { DashboardAssets } from './DashboardAssets';
 export { WalletSelectorModal } from './WalletSelectorModal';
 export { WalletRow } from './WalletRow';
-export { ToggleRow } from './ToggleRow';
 export { ReceiveModal } from './ReceiveModal';
 export { MnemonicDisplay } from './MnemonicDisplay';
 export { NetworkSelector } from './NetworkSelector';
-export { SettingsDropdown } from './SettingsDropdown';
 export { WalletPreview } from './WalletPreview';
 export { WalletSwitcher } from './WalletSwitcher';
 

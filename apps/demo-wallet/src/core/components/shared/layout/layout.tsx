@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import { SettingsDropdown } from '@/components/SettingsDropdown';
+import { SettingsDropdown } from '@/features/settings';
 // import { StreamingStatus } from './StreamingStatus';
 
 interface LayoutProps {
