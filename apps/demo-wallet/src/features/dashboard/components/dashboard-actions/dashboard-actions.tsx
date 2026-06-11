@@ -6,39 +6,33 @@
  *
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DashboardActionButton } from '../dashboard-action-button';
 
-import { ReceiveModal } from '@/features/wallets';
-import { SwapIcon, ReceiveIcon, SendIcon } from '@/core/components/ui/icons';
+import { SwapIcon, SendIcon, StakeIcon } from '@/core/components/ui/icons';
 
 export const DashboardActions: React.FC = () => {
     const navigate = useNavigate();
-    const [isReceiveOpen, setIsReceiveOpen] = useState(false);
 
     return (
-        <>
-            <div className="flex items-stretch gap-2">
-                <DashboardActionButton
-                    icon={<SwapIcon className="w-6 h-6" />}
-                    label="Swap"
-                    onClick={() => navigate('/swap')}
-                />
-                <DashboardActionButton
-                    icon={<SendIcon className="w-6 h-6" />}
-                    label="Send"
-                    onClick={() => navigate('/send')}
-                />
-                <DashboardActionButton
-                    icon={<ReceiveIcon className="w-6 h-6" />}
-                    label="Receive"
-                    onClick={() => setIsReceiveOpen(true)}
-                />
-            </div>
-
-            <ReceiveModal isOpen={isReceiveOpen} onClose={() => setIsReceiveOpen(false)} />
-        </>
+        <div className="flex items-stretch gap-2">
+            <DashboardActionButton
+                icon={<SendIcon className="w-6 h-6" />}
+                label="Send"
+                onClick={() => navigate('/send')}
+            />
+            <DashboardActionButton
+                icon={<SwapIcon className="w-6 h-6" />}
+                label="Swap"
+                onClick={() => navigate('/swap')}
+            />
+            <DashboardActionButton
+                icon={<StakeIcon className="w-6 h-6" />}
+                label="Stake"
+                onClick={() => navigate('/staking')}
+            />
+        </div>
     );
 };
