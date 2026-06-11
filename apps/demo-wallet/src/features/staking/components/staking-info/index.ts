@@ -6,7 +6,4 @@
  *
  */
 
-export * from './WalletDashboard';
-export * from './TracePage';
-export * from './TransactionDetail';
-export * from './TonConnectRoute';
+export * from './staking-info';

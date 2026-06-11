@@ -12,8 +12,7 @@ import { useStaking } from '@demo/wallet-core';
 import { useNavigate } from 'react-router-dom';
 import { UnstakeMode } from '@ton/walletkit';
 
-import { Button } from '../Button';
-
+import { Button } from '@/components/Button';
 import { Card } from '@/core/components/ui/card';
 import { cn } from '@/core/lib/utils';
 

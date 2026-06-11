@@ -6,7 +6,6 @@
  *
  */
 
-export * from './WalletDashboard';
-export * from './TracePage';
-export * from './TransactionDetail';
-export * from './TonConnectRoute';
+export * from './components/staking-screen';
+export * from './components/staking-info';
+export * from './components/staking-interface';
