@@ -19,9 +19,9 @@ import { createComponentLogger } from '@/core/lib/logger';
 import { Layout } from '@/core/components/shared/layout';
 import { Input } from '@/core/components/ui/input';
 import { Card } from '@/core/components/ui/card';
-import { getFormattedJettonInfo } from '@/utils/jetton';
-import { useFormattedJetton } from '@/hooks/useFormattedJetton';
-import { useJettonInfo } from '@/hooks/useJettonInfo';
+import { getFormattedJettonInfo } from '@/features/jettons';
+import { useFormattedJetton } from '@/features/jettons';
+import { useJettonInfo } from '@/features/jettons';
 import { useSendToken } from '@/hooks/useSendToken';
 
 // Create logger for send transaction

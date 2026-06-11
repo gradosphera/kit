@@ -13,7 +13,7 @@ import type { JettonInfo } from '@ton/walletkit';
 
 import { DashboardAssetRow, DashboardAssetRowSkeleton } from './DashboardAssetRow';
 
-import { getJettonsName, getJettonsSymbol } from '@/utils/jetton';
+import { getJettonsName, getJettonsSymbol } from '@/features/jettons';
 import { findRate, formatRate, toDecimal } from '@/core/utils';
 
 const TON_DECIMALS = 9;

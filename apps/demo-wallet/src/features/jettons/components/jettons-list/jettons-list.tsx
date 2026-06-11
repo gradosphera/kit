@@ -10,10 +10,9 @@ import React, { useState } from 'react';
 import type { Jetton } from '@ton/walletkit';
 import { useJettons } from '@demo/wallet-core';
 
-import { Button } from './Button';
-
+import { Button } from '@/components/Button';
 import { createComponentLogger } from '@/core/lib/logger';
-import { useFormatJetton, useFormattedJetton } from '@/hooks/useFormattedJetton';
+import { useFormatJetton, useFormattedJetton } from '@/features/jettons';
 
 // Create logger for jettons list
 const log = createComponentLogger('JettonsList');

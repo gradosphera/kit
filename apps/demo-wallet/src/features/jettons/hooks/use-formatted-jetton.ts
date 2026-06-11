@@ -10,7 +10,7 @@ import { useCallback, useMemo } from 'react';
 import type { Jetton } from '@ton/walletkit';
 import { useJettons } from '@demo/wallet-core';
 
-import { getFormattedJettonInfo } from '@/utils/jetton';
+import { getFormattedJettonInfo } from '../utils/jetton';
 
 export const useFormatJetton = () => {
     const { formatJettonAmount } = useJettons();

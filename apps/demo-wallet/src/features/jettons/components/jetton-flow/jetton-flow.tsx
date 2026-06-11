@@ -10,7 +10,7 @@ import { memo } from 'react';
 import type { Address } from '@ton/core';
 import type { TransactionTraceMoneyFlowItem } from '@ton/walletkit';
 
-import { resolveTokenAddress, TON_INFO, useJettonInfo } from '../hooks/useJettonInfo';
+import { resolveTokenAddress, TON_INFO, useJettonInfo } from '../../hooks/use-jetton-info';
 
 import { formatUnits } from '@/core/utils/units';
 

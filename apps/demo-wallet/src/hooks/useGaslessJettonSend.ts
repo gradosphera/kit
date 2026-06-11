@@ -11,7 +11,7 @@ import { isValidAddress, hasSignMessageSupport } from '@ton/walletkit';
 import type { Jetton, Wallet, GaslessSupportedAsset, SendTransactionResponse } from '@ton/walletkit';
 import { useGasless } from '@demo/wallet-core';
 
-import { useJettonInfo } from '@/hooks/useJettonInfo';
+import { useJettonInfo } from '@/features/jettons';
 import { formatUnits, parseUnits } from '@/core/utils/units';
 
 const QUOTE_DEBOUNCE_MS = 400;

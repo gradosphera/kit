@@ -14,7 +14,7 @@ import type { SwapToken } from '@ton/walletkit';
 
 import { cn } from '@/core/lib/utils';
 import { USDT_ADDRESS } from '@/constants/swap';
-import { getJettonsImage, getJettonsSymbol } from '@/utils/jetton';
+import { getJettonsImage, getJettonsSymbol } from '@/features/jettons';
 import { CircleLogo } from '@/components/CircleLogo';
 
 interface TokenSelectorProps {

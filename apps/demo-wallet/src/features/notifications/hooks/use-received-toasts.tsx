@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { useJettons, useRates, useWallet } from '@demo/wallet-core';
 import type { RateEntry } from '@demo/wallet-core';
 
-import { getJettonsSymbol } from '@/utils/jetton';
+import { getJettonsSymbol } from '@/features/jettons';
 import { formatAmount, formatUsd, toDecimal } from '@/core/utils';
 
 const TON_KEY = 'TON';

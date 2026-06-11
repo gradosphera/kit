@@ -14,9 +14,9 @@ import { toast } from 'sonner';
 
 import { Button } from './Button';
 import { HoldToSignButton } from './HoldToSignButton';
-import { JettonFlow } from './JettonFlow';
 import { SuccessCard } from './SuccessCard';
 
+import { JettonFlow } from '@/features/jettons';
 import { createComponentLogger } from '@/core/lib/logger';
 
 type RequestEvent = SendTransactionRequestEvent | SignMessageRequestEvent;

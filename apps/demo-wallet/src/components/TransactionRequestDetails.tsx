@@ -10,8 +10,7 @@ import React from 'react';
 import type { StructuredItem, TransactionRequest, TransactionRequestMessage } from '@ton/walletkit';
 import { getAddressExplorerUrls } from '@demo/wallet-core';
 
-import { useActiveWalletNetwork, useJettonInfo } from '../hooks/useJettonInfo';
-
+import { useActiveWalletNetwork, useJettonInfo } from '@/features/jettons';
 import { normalizeAddress, shortenAddress } from '@/core/utils/formatters';
 import { decodeTextCommentPayload } from '@/core/utils/payload';
 import { formatNanoTonAmount, formatTokenAmount } from '@/core/utils/units';

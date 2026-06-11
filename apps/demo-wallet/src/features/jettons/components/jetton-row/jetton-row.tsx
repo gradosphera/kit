@@ -9,7 +9,7 @@
 import React from 'react';
 import type { Jetton } from '@ton/walletkit';
 
-import { useFormattedJetton } from '@/hooks/useFormattedJetton';
+import { useFormattedJetton } from '@/features/jettons';
 
 interface JettonRowProps {
     jetton: Jetton;

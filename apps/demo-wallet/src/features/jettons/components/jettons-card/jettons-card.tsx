@@ -9,12 +9,12 @@
 import React from 'react';
 import { useJettons } from '@demo/wallet-core';
 
-import { Button } from './Button';
-import { JettonRow } from './JettonRow';
+import { JettonRow } from '../jetton-row';
 
+import { Button } from '@/components/Button';
 import { createComponentLogger } from '@/core/lib/logger';
 import { Card } from '@/core/components/ui/card';
-import { getJettonsName } from '@/utils/jetton';
+import { getJettonsName } from '@/features/jettons';
 
 const log = createComponentLogger('JettonsCard');
 

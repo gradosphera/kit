@@ -15,7 +15,8 @@ import { toast } from 'sonner';
 
 import { RequestModal } from './RequestModal';
 import { TransactionRequestDetails } from './TransactionRequestDetails';
-import { useActiveWalletNetwork } from '../hooks/useJettonInfo';
+
+import { useActiveWalletNetwork } from '@/features/jettons';
 
 interface TransactionRequestModalProps {
     request: SendTransactionRequestEvent;
