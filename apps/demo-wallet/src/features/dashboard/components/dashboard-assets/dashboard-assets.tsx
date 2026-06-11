@@ -11,7 +11,7 @@ import { ChevronRight } from 'lucide-react';
 import { useJettons, useRates, useWallet, useWalletKit } from '@demo/wallet-core';
 import type { JettonInfo } from '@ton/walletkit';
 
-import { DashboardAssetRow, DashboardAssetRowSkeleton } from './DashboardAssetRow';
+import { DashboardAssetRow, DashboardAssetRowSkeleton } from '../dashboard-asset-row';
 
 import { getJettonsName, getJettonsSymbol } from '@/features/jettons';
 import { findRate, formatRate, toDecimal } from '@/core/utils';

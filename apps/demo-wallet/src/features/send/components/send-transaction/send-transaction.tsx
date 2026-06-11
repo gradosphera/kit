@@ -15,7 +15,8 @@ import { toast } from 'sonner';
 
 import { useSendToken } from '../../hooks/use-send-token';
 
-import { Button, AnimatedBalance } from '@/components';
+import { Button } from '@/components';
+import { AnimatedBalance } from '@/features/dashboard';
 import { WalletSwitcher } from '@/features/wallets';
 import { createComponentLogger } from '@/core/lib/logger';
 import { Layout } from '@/core/components/shared/layout';

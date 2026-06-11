@@ -15,7 +15,10 @@ import {
     useSignMessageRequests,
 } from '@demo/wallet-core';
 
-import { DashboardHeader, BalanceTotal, DashboardActions, DashboardAssets } from '../components';
+import { DashboardHeader } from '../dashboard-header';
+import { BalanceTotal } from '../balance-total';
+import { DashboardActions } from '../dashboard-actions';
+import { DashboardAssets } from '../dashboard-assets';
 
 import {
     ConnectRequestModal,

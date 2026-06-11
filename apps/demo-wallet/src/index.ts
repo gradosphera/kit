@@ -8,7 +8,6 @@
 
 // Re-export main app components and utilities
 export * from './components';
-export * from './pages';
 export * from './hooks';
 export * from '@/core/utils';
 

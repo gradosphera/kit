@@ -9,7 +9,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { DashboardActionButton } from './DashboardActionButton';
+import { DashboardActionButton } from '../dashboard-action-button';
 
 import { ReceiveModal } from '@/features/wallets';
 import { SwapIcon, ReceiveIcon, SendIcon } from '@/core/components/ui/icons';
