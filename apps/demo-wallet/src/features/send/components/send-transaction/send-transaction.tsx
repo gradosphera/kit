@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 
 import { useSendToken } from '../../hooks/use-send-token';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { AnimatedBalance } from '@/features/dashboard';
 import { WalletSwitcher } from '@/features/wallets';
 import { createComponentLogger } from '@/core/lib/logger';
@@ -589,7 +589,7 @@ export const SendTransaction: React.FC = () => {
                                                 type="button"
                                                 variant="secondary"
                                                 onClick={handleFastSend}
-                                                isLoading={isLoading}
+                                                loading={isLoading}
                                                 disabled={isSendFastDisabled}
                                                 className="flex-1"
                                                 data-testid="send-fast"
@@ -599,7 +599,7 @@ export const SendTransaction: React.FC = () => {
                                         )}
                                         <Button
                                             type="submit"
-                                            isLoading={isLoading || gasless.isSending}
+                                            loading={isLoading || gasless.isSending}
                                             disabled={isSendDisabled}
                                             className="flex-1"
                                             data-testid="send-submit"

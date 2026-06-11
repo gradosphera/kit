@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 
 import { DAppInfo } from '../dapp-info';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { WalletPreview } from '@/features/wallets';
 import { createComponentLogger } from '@/core/lib/logger';
 
@@ -307,7 +307,7 @@ export const ConnectRequestModal: React.FC<ConnectRequestModalProps> = ({
                     <Button
                         data-testid="connect-approve"
                         onClick={handleApprove}
-                        isLoading={isLoading}
+                        loading={isLoading}
                         disabled={!selectedWallet || isLoading}
                         className="flex-1"
                     >

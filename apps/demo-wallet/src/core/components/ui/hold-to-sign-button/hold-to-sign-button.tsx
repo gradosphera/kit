@@ -11,7 +11,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 interface HoldToSignButtonProps {
     onComplete: () => void;
     disabled?: boolean;
-    isLoading?: boolean;
+    loading?: boolean;
     holdDuration?: number; // Duration in milliseconds
     className?: string;
 }
@@ -19,7 +19,7 @@ interface HoldToSignButtonProps {
 export const HoldToSignButton: React.FC<HoldToSignButtonProps> = ({
     onComplete,
     disabled = false,
-    isLoading = false,
+    loading = false,
     holdDuration = 3000,
     className = '',
 }) => {
@@ -43,7 +43,7 @@ export const HoldToSignButton: React.FC<HoldToSignButtonProps> = ({
     }, []);
 
     const handleHoldStart = useCallback(() => {
-        if (disabled || isLoading || isComplete) return;
+        if (disabled || loading || isComplete) return;
 
         setIsHolding(true);
         setShowRipples(true);
@@ -74,7 +74,7 @@ export const HoldToSignButton: React.FC<HoldToSignButtonProps> = ({
                 setProgress(0);
             }, 1000);
         }, holdDuration);
-    }, [disabled, isLoading, isComplete, holdDuration, onComplete, clearTimers]);
+    }, [disabled, loading, isComplete, holdDuration, onComplete, clearTimers]);
 
     const handleHoldEnd = useCallback(() => {
         if (isComplete) return;
@@ -110,7 +110,7 @@ export const HoldToSignButton: React.FC<HoldToSignButtonProps> = ({
     const buttonClasses = `
         relative flex-1 px-4 py-3 rounded-lg font-medium text-white
         overflow-hidden transition-all duration-300 select-none
-        ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+        ${disabled || loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         ${isComplete ? 'bg-green-600' : isHolding ? 'bg-blue-700 scale-[0.98]' : 'bg-blue-600 hover:bg-blue-700'}
         ${className}
     `;
@@ -124,7 +124,7 @@ export const HoldToSignButton: React.FC<HoldToSignButtonProps> = ({
             onTouchStart={handleHoldStart}
             onTouchEnd={handleHoldEnd}
             onTouchCancel={handleHoldEnd}
-            disabled={disabled || isLoading}
+            disabled={disabled || loading}
         >
             {/* Ripple effects */}
             {showRipples && !isComplete && (
@@ -176,7 +176,7 @@ export const HoldToSignButton: React.FC<HoldToSignButtonProps> = ({
 
             {/* Button content */}
             <div className="relative z-10 flex items-center justify-center space-x-2">
-                {isLoading ? (
+                {loading ? (
                     <>
                         <svg className="animate-spin h-5 w-5 flex-shrink-0" viewBox="0 0 24 24">
                             <circle

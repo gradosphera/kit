@@ -12,7 +12,7 @@ import type { SwapToken } from '@ton/walletkit';
 
 import { TokenSelector } from '../token-selector';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { cn } from '@/core/lib/utils';
 
 interface Props {

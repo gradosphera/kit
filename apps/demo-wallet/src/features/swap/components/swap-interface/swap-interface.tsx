@@ -16,7 +16,7 @@ import { SwapSettings } from '../swap-settings';
 import { TokenInput } from '../token-input';
 import { QuoteTimer } from '../quote-timer';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { Card } from '@/core/components/ui/card';
 import { cn } from '@/core/lib/utils';
 
@@ -192,7 +192,7 @@ export const SwapInterface: FC<SwapInterfaceProps> = ({ className }) => {
                         <QuoteTimer
                             expiresAt={currentQuote.expiresAt}
                             onRefresh={handleGetQuote}
-                            isLoading={isLoadingQuote}
+                            loading={isLoadingQuote}
                         />
 
                         <div className="border-t border-gray-200 my-6" />
@@ -239,7 +239,7 @@ export const SwapInterface: FC<SwapInterfaceProps> = ({ className }) => {
                     <Button
                         disabled={isSwapDisabled}
                         onClick={handleGetQuote}
-                        isLoading={isLoadingQuote}
+                        loading={isLoadingQuote}
                         className="w-full"
                     >
                         {isLoadingQuote ? 'Getting Quote...' : 'Get Quote'}
@@ -250,7 +250,7 @@ export const SwapInterface: FC<SwapInterfaceProps> = ({ className }) => {
                     <Button
                         disabled={!currentQuote || isSwapping}
                         onClick={handleExecuteSwap}
-                        isLoading={isSwapping}
+                        loading={isSwapping}
                         className="w-full"
                     >
                         {isSwapping ? 'Swapping...' : getSwapButtonText()}

@@ -9,7 +9,7 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { Modal } from '@/core/components/ui/modal';
 
 interface SwapSettingsProps {

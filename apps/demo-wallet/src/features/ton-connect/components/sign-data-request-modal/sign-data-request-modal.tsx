@@ -13,7 +13,7 @@ import { useAuth } from '@demo/wallet-core';
 
 import { DAppInfo } from '../dapp-info';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { WalletPreview } from '@/features/wallets';
 import { HoldToSignButton } from '@/core/components/ui/hold-to-sign-button';
 import { createComponentLogger } from '@/core/lib/logger';
@@ -263,7 +263,7 @@ export const SignDataRequestModal: React.FC<SignDataRequestModalProps> = ({
                             {holdToSign ? (
                                 <HoldToSignButton
                                     onComplete={handleApprove}
-                                    isLoading={isLoading}
+                                    loading={isLoading}
                                     disabled={isLoading}
                                     holdDuration={3000}
                                 />
@@ -271,7 +271,7 @@ export const SignDataRequestModal: React.FC<SignDataRequestModalProps> = ({
                                 <Button
                                     data-testid="sign-data-approve"
                                     onClick={handleApprove}
-                                    isLoading={isLoading}
+                                    loading={isLoading}
                                     disabled={isLoading}
                                     className="flex-1"
                                 >

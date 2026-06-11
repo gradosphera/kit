@@ -9,7 +9,7 @@
 import React, { useCallback, useState } from 'react';
 import { useTonConnect } from '@demo/wallet-core';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { Modal } from '@/core/components/ui/modal';
 
 interface ConnectDappModalProps {
@@ -60,7 +60,7 @@ export const ConnectDappModal: React.FC<ConnectDappModalProps> = ({ isOpen, onCl
                 <Button
                     data-testid="tonconnect-process"
                     onClick={handleConnect}
-                    isLoading={isConnecting}
+                    loading={isConnecting}
                     disabled={!url.trim() || isConnecting}
                     className="w-full"
                 >

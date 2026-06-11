@@ -9,15 +9,15 @@
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 
 interface QuoteTimerProps {
     expiresAt?: number; // Unix timestamp in seconds
     onRefresh: () => void;
-    isLoading?: boolean;
+    loading?: boolean;
 }
 
-export const QuoteTimer: FC<QuoteTimerProps> = ({ expiresAt, onRefresh, isLoading = false }) => {
+export const QuoteTimer: FC<QuoteTimerProps> = ({ expiresAt, onRefresh, loading = false }) => {
     const [timeLeft, setTimeLeft] = useState(0);
 
     useEffect(() => {
@@ -47,13 +47,7 @@ export const QuoteTimer: FC<QuoteTimerProps> = ({ expiresAt, onRefresh, isLoadin
         return (
             <div className="flex items-center justify-between rounded-lg bg-yellow-50 border border-yellow-200 px-3 py-2">
                 <span className="text-yellow-800 text-sm font-medium">Quote expired</span>
-                <Button
-                    onClick={onRefresh}
-                    disabled={isLoading}
-                    isLoading={isLoading}
-                    size="sm"
-                    className="h-7 px-3 text-xs"
-                >
+                <Button onClick={onRefresh} disabled={loading} loading={loading} size="sm" className="h-7 px-3 text-xs">
                     Refresh
                 </Button>
             </div>

@@ -12,7 +12,7 @@ import { useAuth, useWalletKit, useWalletStore } from '@demo/wallet-core';
 import type { SavedWallet } from '@demo/wallet-core';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { HoldToSignButton } from '@/core/components/ui/hold-to-sign-button';
 import { SuccessCard } from '@/core/components/ui/success-card';
 import { JettonFlow } from '@/features/jettons';
@@ -320,14 +320,14 @@ export const RequestModal: React.FC<RequestModalProps> = ({
                         (holdToSign ? (
                             <HoldToSignButton
                                 onComplete={handleApprove}
-                                isLoading={isLoading}
+                                loading={isLoading}
                                 disabled={isLoading}
                                 holdDuration={3000}
                             />
                         ) : (
                             <Button
                                 onClick={handleApprove}
-                                isLoading={isLoading}
+                                loading={isLoading}
                                 disabled={isLoading}
                                 className="flex-1"
                                 data-testid={testIds.approve}

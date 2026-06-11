@@ -14,7 +14,7 @@ import { useStaking, useWallet } from '@demo/wallet-core';
 import { StakingInterface } from '../staking-interface';
 import { StakingInfo } from '../staking-info';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { Layout } from '@/core/components/shared/layout';
 
 export const Staking: FC = () => {

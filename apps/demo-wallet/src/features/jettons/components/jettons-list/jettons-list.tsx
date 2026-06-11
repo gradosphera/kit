@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import type { Jetton } from '@ton/walletkit';
 import { useJettons } from '@demo/wallet-core';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { createComponentLogger } from '@/core/lib/logger';
 import { useFormatJetton, useFormattedJetton } from '@/features/jettons';
 
@@ -85,7 +85,7 @@ export const JettonsList: React.FC<JettonsListProps> = ({
                         variant="secondary"
                         size="sm"
                         onClick={handleRefresh}
-                        isLoading={isRefreshing}
+                        loading={isRefreshing}
                         disabled={isLoadingJettons}
                     >
                         {isRefreshing ? 'Refreshing...' : 'Refresh'}

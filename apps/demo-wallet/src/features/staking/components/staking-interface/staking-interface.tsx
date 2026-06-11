@@ -12,7 +12,7 @@ import { useStaking } from '@demo/wallet-core';
 import { useNavigate } from 'react-router-dom';
 import { UnstakeMode } from '@ton/walletkit';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { Card } from '@/core/components/ui/card';
 import { cn } from '@/core/lib/utils';
 
@@ -170,7 +170,7 @@ export const StakingInterface: FC = () => {
                         className="w-full py-4 text-lg font-bold"
                         onClick={handleGetQuote}
                         disabled={!canGetQuote || isLoadingQuote}
-                        isLoading={isLoadingQuote}
+                        loading={isLoadingQuote}
                     >
                         Preview {tab === 'stake' ? 'Stake' : 'Unstake'}
                     </Button>
@@ -184,7 +184,7 @@ export const StakingInterface: FC = () => {
                         >
                             Cancel
                         </Button>
-                        <Button className="py-4 font-bold" onClick={handleAction} isLoading={isStaking || isUnstaking}>
+                        <Button className="py-4 font-bold" onClick={handleAction} loading={isStaking || isUnstaking}>
                             Confirm {tab === 'stake' ? 'Stake' : 'Unstake'}
                         </Button>
                     </div>

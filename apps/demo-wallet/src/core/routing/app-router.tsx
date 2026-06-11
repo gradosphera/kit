@@ -24,7 +24,7 @@ import { LedgerScreen } from '@/features/ledger';
 import { WelcomeScreen, CreateWalletScreen, ImportWalletScreen } from '@/features/wallet-setup';
 import { useWalletDataUpdater } from '@/core/hooks/use-wallet-data-updater';
 import { useReceivedToasts } from '@/features/notifications';
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 
 export const AppRouter: React.FC = () => {
     const isPasswordSet = useWalletStore((state) => state.auth.isPasswordSet);

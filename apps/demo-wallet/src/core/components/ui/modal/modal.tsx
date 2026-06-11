@@ -13,7 +13,7 @@ import { ChevronLeft, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '../dialog';
 import { Drawer, DrawerContent, DrawerTitle } from '../drawer';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/core/components/ui/button';
 import { cn } from '@/core/lib/utils';
 import { useIsMobile } from '@/core/hooks/use-media-query';
 
