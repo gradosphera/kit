@@ -35,8 +35,9 @@ interface WalletRowProps {
     wallet: SavedWallet;
     isActive: boolean;
     onSelect: () => void;
-    onRename: (id: string, name: string) => void;
-    onRemove: (id: string) => void;
+    /** Omit both to render a select-only row (no "⋯" management menu). */
+    onRename?: (id: string, name: string) => void;
+    onRemove?: (id: string) => void;
 }
 
 export const WalletRow: React.FC<WalletRowProps> = ({ wallet, isActive, onSelect, onRename, onRemove }) => {
@@ -44,6 +45,8 @@ export const WalletRow: React.FC<WalletRowProps> = ({ wallet, isActive, onSelect
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [draftName, setDraftName] = useState(wallet.name);
+
+    const hasActions = Boolean(onRename || onRemove);
 
     const startRename = () => {
         setDraftName(wallet.name);
@@ -53,7 +56,7 @@ export const WalletRow: React.FC<WalletRowProps> = ({ wallet, isActive, onSelect
 
     const saveRename = () => {
         const next = draftName.trim();
-        if (next && next !== wallet.name) onRename(wallet.id, next);
+        if (next && next !== wallet.name) onRename?.(wallet.id, next);
         setIsEditing(false);
     };
 
@@ -131,69 +134,75 @@ export const WalletRow: React.FC<WalletRowProps> = ({ wallet, isActive, onSelect
                 </button>
             </div>
 
-            <Popover
-                open={menuOpen}
-                onOpenChange={(open) => {
-                    setMenuOpen(open);
-                    if (!open) setConfirmingDelete(false);
-                }}
-            >
-                <PopoverTrigger asChild>
-                    <button
-                        type="button"
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors flex-shrink-0"
-                        aria-label="More actions"
-                    >
-                        <MoreHorizontal className="w-5 h-5" />
-                    </button>
-                </PopoverTrigger>
-                <PopoverContent align="end" side="bottom" className="w-44 p-1" onClick={(e) => e.stopPropagation()}>
-                    {confirmingDelete ? (
-                        <div className="p-2">
-                            <p className="text-xs text-gray-500 mb-2">Delete this wallet? This can’t be undone.</p>
-                            <div className="flex gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setConfirmingDelete(false)}
-                                    className="flex-1 text-sm font-medium text-gray-700 rounded-lg py-1.5 hover:bg-gray-100"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setMenuOpen(false);
-                                        onRemove(wallet.id);
-                                    }}
-                                    className="flex-1 text-sm font-semibold text-white bg-red-500 rounded-lg py-1.5 hover:bg-red-600"
-                                >
-                                    Delete
-                                </button>
+            {hasActions && (
+                <Popover
+                    open={menuOpen}
+                    onOpenChange={(open) => {
+                        setMenuOpen(open);
+                        if (!open) setConfirmingDelete(false);
+                    }}
+                >
+                    <PopoverTrigger asChild>
+                        <button
+                            type="button"
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors flex-shrink-0"
+                            aria-label="More actions"
+                        >
+                            <MoreHorizontal className="w-5 h-5" />
+                        </button>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" side="bottom" className="w-44 p-1" onClick={(e) => e.stopPropagation()}>
+                        {confirmingDelete ? (
+                            <div className="p-2">
+                                <p className="text-xs text-gray-500 mb-2">Delete this wallet? This can’t be undone.</p>
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setConfirmingDelete(false)}
+                                        className="flex-1 text-sm font-medium text-gray-700 rounded-lg py-1.5 hover:bg-gray-100"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMenuOpen(false);
+                                            onRemove?.(wallet.id);
+                                        }}
+                                        className="flex-1 text-sm font-semibold text-white bg-red-500 rounded-lg py-1.5 hover:bg-red-600"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <>
-                            <button
-                                type="button"
-                                onClick={startRename}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-900 rounded-lg hover:bg-gray-100"
-                            >
-                                <Pencil className="w-4 h-4 text-gray-500" />
-                                Rename
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setConfirmingDelete(true)}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50"
-                            >
-                                <Trash2 className="w-4 h-4" />
-                                Delete
-                            </button>
-                        </>
-                    )}
-                </PopoverContent>
-            </Popover>
+                        ) : (
+                            <>
+                                {onRename && (
+                                    <button
+                                        type="button"
+                                        onClick={startRename}
+                                        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-900 rounded-lg hover:bg-gray-100"
+                                    >
+                                        <Pencil className="w-4 h-4 text-gray-500" />
+                                        Rename
+                                    </button>
+                                )}
+                                {onRemove && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setConfirmingDelete(true)}
+                                        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        Delete
+                                    </button>
+                                )}
+                            </>
+                        )}
+                    </PopoverContent>
+                </Popover>
+            )}
         </div>
     );
 };

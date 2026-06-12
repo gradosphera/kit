@@ -76,9 +76,9 @@ const JettonFlowItem = memo(function JettonFlowItem({
 
 export const JettonFlow = memo(function JettonFlow({ transfers }: { transfers: TransactionTraceMoneyFlowItem[] }) {
     return (
-        <div className="mt-2">
-            <div className="font-semibold mb-1">Money Flow:</div>
-            <div className="flex flex-col gap-2">
+        <div className="rounded-2xl bg-gray-100 p-4">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Money flow</p>
+            <div className="mt-3 flex flex-col gap-3">
                 {transfers?.length > 0
                     ? transfers.map((transfer) =>
                           transfer.assetType === 'jetton' ? (

@@ -40,7 +40,7 @@ function AddressLink({ address, label }: { address?: string; label?: string }) {
 }
 
 function DetailPill({ children }: { children: React.ReactNode }) {
-    return <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-700 rounded">{children}</span>;
+    return <span className="text-[10px] px-2 py-0.5 bg-white text-gray-600 rounded">{children}</span>;
 }
 
 function PayloadDetails({ label, payload }: { label: string; payload?: string }) {
@@ -74,7 +74,7 @@ function renderDetails(details: Array<string | undefined>) {
 
 function RawMessageAction({ message, index }: { message: TransactionRequestMessage; index: number }) {
     return (
-        <div className="p-3 border border-gray-200 rounded-lg space-y-2">
+        <div className="space-y-2 py-3 first:pt-0 last:pb-0">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <div className="text-sm font-medium text-gray-900">Message #{index + 1}</div>
@@ -98,7 +98,7 @@ function RawMessageAction({ message, index }: { message: TransactionRequestMessa
 
 function TonItemAction({ item, index }: { item: Extract<StructuredItem, { type: 'ton' }>; index: number }) {
     return (
-        <div className="p-3 border border-gray-200 rounded-lg space-y-2">
+        <div className="space-y-2 py-3 first:pt-0 last:pb-0">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <div className="text-sm font-medium text-gray-900">Send GRAM #{index + 1}</div>
@@ -123,7 +123,7 @@ function JettonItemAction({ item, index }: { item: Extract<StructuredItem, { typ
     const jettonInfo = useJettonInfo(item.master);
 
     return (
-        <div className="p-3 border border-gray-200 rounded-lg space-y-2">
+        <div className="space-y-2 py-3 first:pt-0 last:pb-0">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <div className="text-sm font-medium text-gray-900">Send jetton #{index + 1}</div>
@@ -158,7 +158,7 @@ function JettonItemAction({ item, index }: { item: Extract<StructuredItem, { typ
 
 function NftItemAction({ item, index }: { item: Extract<StructuredItem, { type: 'nft' }>; index: number }) {
     return (
-        <div className="p-3 border border-gray-200 rounded-lg space-y-2">
+        <div className="space-y-2 py-3 first:pt-0 last:pb-0">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <div className="text-sm font-medium text-gray-900">Transfer NFT #{index + 1}</div>
@@ -187,20 +187,18 @@ function StructuredItemAction({ item, index }: { item: StructuredItem; index: nu
     return <NftItemAction item={item} index={index} />;
 }
 
-export function TransactionRequestDetails({ request, title = 'You will sign:' }: TransactionRequestDetailsProps) {
+export function TransactionRequestDetails({ request, title = 'You will sign' }: TransactionRequestDetailsProps) {
     const items = request.items ?? [];
     const messages = request.messages ?? [];
     const hasItems = items.length > 0;
     const count = hasItems ? items.length : messages.length;
 
     return (
-        <div>
-            <div className="font-semibold mb-1">{title}</div>
-            <div className="space-y-2">
+        <div className="rounded-2xl bg-gray-100 p-4">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">{title}</p>
+            <div className="mt-3 divide-y divide-gray-200">
                 {count === 0 ? (
-                    <div className="border rounded-lg p-3 bg-gray-50">
-                        <p className="text-sm text-gray-600 text-center">No outgoing messages in this request</p>
-                    </div>
+                    <p className="text-sm text-gray-500">No outgoing messages in this request</p>
                 ) : hasItems ? (
                     items.map((item, index) => (
                         <StructuredItemAction key={`${item.type}-${index}`} item={item} index={index} />

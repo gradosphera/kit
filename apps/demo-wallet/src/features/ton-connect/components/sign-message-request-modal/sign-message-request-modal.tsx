@@ -36,25 +36,12 @@ export const SignMessageRequestModal: React.FC<SignMessageRequestModalProps> = (
             request={request}
             savedWallets={savedWallets}
             isOpen={isOpen}
-            title="Sign Message Request"
-            subtitle="A dApp wants you to sign a transaction without broadcasting it"
-            details={<TransactionRequestDetails request={request.request} title="The dApp can submit:" />}
-            warning={{
-                tone: 'yellow',
-                message: (
-                    <>
-                        <strong>Warning:</strong> This will sign a transaction that the dApp can submit later. Only
-                        approve if you trust the requesting dApp.
-                    </>
-                ),
-            }}
-            approveLabel="Sign Message"
-            successMessage="Message signed successfully"
-            testIds={{
-                request: 'request',
-                approve: 'sign-message-approve',
-                reject: 'sign-message-reject',
-            }}
+            verb="Sign message for"
+            subtitle="A dApp wants you to sign a transaction without broadcasting it:"
+            details={<TransactionRequestDetails request={request.request} title="The dApp can submit" />}
+            approveLabel="Sign message"
+            disclaimer="Only sign if you trust the requesting dApp — it can submit this transaction later."
+            testIds={{ approve: 'sign-message-approve', reject: 'sign-message-reject' }}
             onApprove={handleApprove}
             onReject={handleReject}
             loggerName="SignMessageRequestModal"

@@ -13,18 +13,20 @@ import { ChevronLeft, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '../dialog';
 import { Drawer, DrawerContent, DrawerTitle } from '../drawer';
 
-import { Button } from '@/core/components/ui/button';
 import { cn } from '@/core/lib/utils';
 import { useIsMobile } from '@/core/hooks/use-media-query';
 
 export interface ModalContainerProps extends ComponentProps<'div'> {
     isOpened: boolean;
     onOpenChange: (value: boolean) => void;
+    /** When false, the modal can't be dismissed by backdrop / Esc / swipe — only via its own actions. */
+    dismissible?: boolean;
 }
 
 export const ModalContainer: React.FC<ModalContainerProps> = ({
     isOpened,
     onOpenChange,
+    dismissible = true,
     children,
     className,
     ...props
@@ -33,7 +35,7 @@ export const ModalContainer: React.FC<ModalContainerProps> = ({
 
     if (isMobile) {
         return (
-            <Drawer open={isOpened} onOpenChange={onOpenChange}>
+            <Drawer open={isOpened} onOpenChange={onOpenChange} dismissible={dismissible}>
                 <DrawerContent className={cn('max-w-md mx-auto', className)} aria-describedby={undefined} {...props}>
                     {children}
                 </DrawerContent>
@@ -46,6 +48,8 @@ export const ModalContainer: React.FC<ModalContainerProps> = ({
             <DialogContent
                 className={cn('max-w-md rounded-2xl p-0 gap-0', className)}
                 aria-describedby={undefined}
+                onInteractOutside={dismissible ? undefined : (e) => e.preventDefault()}
+                onEscapeKeyDown={dismissible ? undefined : (e) => e.preventDefault()}
                 {...props}
             >
                 {children}
@@ -56,11 +60,25 @@ export const ModalContainer: React.FC<ModalContainerProps> = ({
 
 interface ModalHeaderProps extends ComponentProps<'div'> {
     onClose?: () => void;
+    /** Renders a round back button (same style as nft/assets ScreenHeader) before the title. */
+    onBack?: () => void;
 }
 
-export const ModalHeader: React.FC<ModalHeaderProps> = ({ onClose, children, className, ...props }) => (
+export const ModalHeader: React.FC<ModalHeaderProps> = ({ onClose, onBack, children, className, ...props }) => (
     <div className={cn('flex items-center justify-between px-4 pt-3 pb-5 md:pt-5', className)} {...props}>
-        <div className="flex items-center gap-2 min-w-0">{children}</div>
+        <div className="flex items-center gap-2 min-w-0">
+            {onBack && (
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors flex-shrink-0"
+                    aria-label="Back"
+                >
+                    <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+                </button>
+            )}
+            {children}
+        </div>
         {onClose && (
             <button
                 type="button"
@@ -92,18 +110,10 @@ export const ModalFooter: React.FC<ComponentProps<'div'>> = ({ children, classNa
     </div>
 );
 
-export const ModalBackButton: React.FC<ComponentProps<'button'>> = ({ className, ...props }) => (
-    <Button variant="secondary" className={cn('!px-2 gap-1 text-sm', className)} {...props}>
-        <ChevronLeft className="h-4 w-4" />
-        <span className="font-semibold">Back</span>
-    </Button>
-);
-
 export const Modal = {
     Container: ModalContainer,
     Header: ModalHeader,
     Title: ModalTitle,
     Body: ModalBody,
     Footer: ModalFooter,
-    BackButton: ModalBackButton,
 };

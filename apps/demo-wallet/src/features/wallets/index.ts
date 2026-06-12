@@ -8,6 +8,7 @@
 
 export * from './components/wallet-switcher';
 export * from './components/wallet-selector-modal';
+export * from './components/wallet-picker-view';
 export * from './components/wallet-row';
 export * from './components/wallet-preview';
 export * from './components/mnemonic-display';

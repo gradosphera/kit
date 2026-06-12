@@ -62,25 +62,12 @@ export const TransactionRequestModal: React.FC<TransactionRequestModalProps> = (
             request={request}
             savedWallets={savedWallets}
             isOpen={isOpen}
-            title="Transaction Request"
-            subtitle="A dApp wants to send a transaction from your wallet"
+            verb="Confirm transaction for"
+            subtitle="A dApp wants to send a transaction from your wallet:"
             details={<TransactionRequestDetails request={request.request} />}
-            warning={{
-                tone: 'red',
-                message: (
-                    <>
-                        <strong>Warning:</strong> This transaction will be irreversible. Only approve if you trust the
-                        requesting dApp and understand the transaction details.
-                    </>
-                ),
-            }}
             approveLabel="Approve & Sign"
-            successMessage="Transaction signed successfully"
-            testIds={{
-                request: 'request',
-                approve: 'send-transaction-approve',
-                reject: 'send-transaction-reject',
-            }}
+            disclaimer="Only approve transactions from dApps you trust. Blockchain transactions are irreversible."
+            testIds={{ approve: 'send-transaction-approve', reject: 'send-transaction-reject' }}
             onApprove={handleApprove}
             onReject={handleReject}
             loggerName="TransactionRequestModal"

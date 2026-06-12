@@ -6,4 +6,4 @@
  *
  */
 
-export * from './dapp-info';
+export * from './dapp-request-modal';
