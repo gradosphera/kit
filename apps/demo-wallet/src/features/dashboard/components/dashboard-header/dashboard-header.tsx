@@ -8,18 +8,23 @@
 
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useWallet } from '@demo/wallet-core';
+import { useTonConnect, useWallet } from '@demo/wallet-core';
 
 import { WalletSelectorModal } from '@/features/wallets';
 import { SettingsDropdown } from '@/features/settings';
 import { ConnectDappModal } from '@/features/ton-connect';
 import { ScanIcon } from '@/core/components/ui/icons';
+import { usePasteHandler } from '@/core/hooks';
 
 export const DashboardHeader: React.FC = () => {
-    const { savedWallets, activeWalletId } = useWallet();
-    const activeWallet = savedWallets.find((w) => w.id === activeWalletId);
     const [isWalletSelectorOpen, setIsWalletSelectorOpen] = useState(false);
     const [isConnectOpen, setIsConnectOpen] = useState(false);
+
+    const { handleTonConnectUrl } = useTonConnect();
+    const { savedWallets, activeWalletId } = useWallet();
+    const activeWallet = savedWallets.find((w) => w.id === activeWalletId);
+
+    usePasteHandler(handleTonConnectUrl, isConnectOpen);
 
     return (
         <header className="flex items-center justify-between px-4 py-3">

@@ -29,25 +29,15 @@ import {
 import { NewLayout } from '@/core/components/shared/new-layout';
 import { NftsCard } from '@/features/nft';
 import { TransactionHistory } from '@/features/transactions';
-import { usePasteHandler } from '@/core/hooks/use-paste-handler';
 
 export const WalletDashboard: React.FC = () => {
     const { getAvailableWallets, savedWallets, getActiveWallet } = useWallet();
     const activeWallet = getActiveWallet();
-    const {
-        handleTonConnectUrl,
-        pendingConnectRequest,
-        isConnectModalOpen,
-        approveConnectRequest,
-        rejectConnectRequest,
-    } = useTonConnect();
+    const { pendingConnectRequest, isConnectModalOpen, approveConnectRequest, rejectConnectRequest } = useTonConnect();
     const { pendingTransactionRequest, isTransactionModalOpen } = useTransactionRequests();
     const { pendingSignDataRequest, isSignDataModalOpen, approveSignDataRequest, rejectSignDataRequest } =
         useSignDataRequests();
     const { pendingSignMessageRequest, isSignMessageModalOpen } = useSignMessageRequests();
-
-    // Keep clipboard paste-to-connect for TonConnect URLs
-    usePasteHandler(handleTonConnectUrl);
 
     return (
         <NewLayout header={<DashboardHeader />}>

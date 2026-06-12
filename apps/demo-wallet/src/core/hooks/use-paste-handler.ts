@@ -11,8 +11,10 @@ import { useEffect } from 'react';
 import { log } from '@/core/lib/logger';
 
 // Hook to listen for paste events and handle TON Connect URLs
-export function usePasteHandler(handleTonConnectUrl: (url: string) => Promise<void>) {
+export function usePasteHandler(handleTonConnectUrl: (url: string) => Promise<void>, isDisabled: boolean) {
     useEffect(() => {
+        if (isDisabled) return;
+
         const handlePaste = async (event: ClipboardEvent) => {
             try {
                 const pastedText = event.clipboardData?.getData('text');
@@ -36,5 +38,5 @@ export function usePasteHandler(handleTonConnectUrl: (url: string) => Promise<vo
 
         document.addEventListener('paste', handlePaste);
         return () => document.removeEventListener('paste', handlePaste);
-    }, [handleTonConnectUrl]);
+    }, [handleTonConnectUrl, isDisabled]);
 }
