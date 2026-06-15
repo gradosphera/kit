@@ -114,7 +114,7 @@ export const StakingInterface: FC = () => {
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
                             <span className="text-sm font-bold text-gray-500">
-                                {tab === 'stake' ? 'GRAM' : 'tsTON'}
+                                {tab === 'stake' ? 'TON' : 'tsTON'}
                             </span>
                         </div>
                     </div>
