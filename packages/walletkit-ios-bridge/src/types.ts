@@ -38,7 +38,6 @@ import type {
     ConnectionRequestEvent,
     EmbeddedRequestEvent,
     GaslessAPI,
-    GaslessProvider,
     GaslessProviderInterface,
 } from '@ton/walletkit';
 import type { OmnistonSwapProviderConfig } from '@ton/walletkit/swap/omniston';

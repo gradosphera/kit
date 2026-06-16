@@ -63,6 +63,8 @@ import { DeDustSwapProvider } from '@ton/walletkit/swap/dedust';
 import type { DeDustSwapProviderConfig } from '@ton/walletkit/swap/dedust';
 import { TonStakersStakingProvider } from '@ton/walletkit/staking/tonstakers';
 import type { TonStakersProviderConfig } from '@ton/walletkit/staking/tonstakers';
+import { TonApiGaslessProvider } from '@ton/walletkit/gasless/tonapi';
+import type { TonApiGaslessProviderConfig } from '@ton/walletkit/gasless/tonapi';
 
 import { SwiftStorageAdapter } from './SwiftStorageAdapter';
 import { SwiftWalletAdapter } from './SwiftWalletAdapter';
@@ -76,7 +78,6 @@ import type {
     SwiftWalletKitConfiguration,
     SwiftWalletSigner,
 } from './types';
-import { TonApiGaslessProvider, type TonApiGaslessProviderConfig } from '@ton/walletkit/gasless/tonapi';
 
 declare global {
     interface Window {
@@ -630,7 +631,7 @@ window.initWalletKit = async (configuration, storage, bridgeTransport, sessionMa
 
         gasless(): GaslessAPI {
             return walletKit.gasless;
-        }
+        },
     };
 };
 
