@@ -28,6 +28,8 @@ For contributing to the @ton/kit monorepo, use `kit-dev` instead. This skill is 
 | Show NFTs | `useNfts()` + `<NftItem />` |
 | Swap tokens | `<SwapWidget />` or `useSwapQuote` + `useBuildSwapTransaction` + `useSendTransaction` |
 | Stake TON | `<StakingWidget />` or staking hooks |
+| Buy TON/jettons with crypto (onramp) | `<CryptoOnrampWidget />` or onramp hooks (`useCryptoOnrampProviders` + `useCryptoOnrampQuote` + `useCreateCryptoOnrampDeposit` + `useCryptoOnrampStatus`) |
+| Use a custom (app-defined) provider | `useCustomProvider<T>(id)` |
 | Sign message | `useSignText` / `useSignBinary` / `useSignCell` |
 | Mainnet/testnet support | Configure both networks + `useDefaultNetwork()` + explicit `network` params |
 | Real-time updates | Register streaming provider + mount `useWatchBalance` / `useWatchTransactions` |
@@ -185,6 +187,45 @@ const { data: balance } = useBalanceByAddress({ address, network });
 
 When you compose these into a custom UI (instead of `<SwapWidget />` / `<StakingWidget />`), you own loading and error state for every step: `useSwapQuote().isLoading` for the quote, `useBuildSwapTransaction().isPending` for the build, `useSendTransaction().isPending` for the send. Disable the submit button on the active step's pending flag, render the active step's `error.message`, and call `reset()` for retry. The widgets handle this for you; the hooks deliberately don't.
 
+### Crypto Onramp (buy TON/jettons with crypto from another chain)
+
+Onramp lets a user deposit crypto on a source chain (e.g. USDT on Arbitrum) and receive TON or a jetton. **It needs a provider registered in AppKit config** — same `providers: []` array as swap/staking/streaming. The widget renders nothing useful until one is registered:
+
+```ts
+import { createLayerswapProvider } from '@ton/appkit/crypto-onramp/layerswap';
+import { createDecentProvider } from '@ton/appkit/crypto-onramp/decent';
+
+const appKit = new AppKit({
+    networks: { /* ... */ },
+    providers: [
+        createLayerswapProvider(),                 // config optional
+        createDecentProvider({ apiKey: 'KEY' }),   // apiKey required
+    ],
+});
+```
+
+Hooks (from `@ton/appkit-react`):
+- `useCryptoOnrampProviders()` — all registered onramp providers (array). `useCryptoOnrampProvider()` returns `[selected, setSelected]` tuple.
+- `useCryptoOnrampProviderById({ id })` — one provider by id. **Param is `id`.**
+- `useCryptoOnrampProviderMetadata({ providerId })` — provider display metadata (name/logo/refundAddressMode). **Synchronous** (no query) and the param here is `providerId`, not `id` — the two onramp hooks disagree on the name, easy to get wrong.
+- `useCryptoOnrampSupportedCurrencies({ providerId? })` — `{ source[], destination[] }` lists. Cached aggressively (1h stale).
+- `useCryptoOnrampQuote({ amount, sourceCurrency, targetCurrency, recipientAddress, isSourceAmount?, providerId? })` — query; returns a `CryptoOnrampQuote` with `sourceAmount`/`targetAmount`/`rate` in **base units** (not decimal strings — unlike `useBalance`).
+- `useCreateCryptoOnrampDeposit()` — **mutation**; call `mutateAsync({ quote, refundAddress })`. Returns `{ depositId, address, amount, memo?, expiresAt? }` — the address/memo the user must send funds to.
+- `useCryptoOnrampStatus({ depositId, providerId })` — poll status; `'pending' | 'success' | 'failed'`. Auto-disabled until `depositId` is set.
+
+Drop-in `<CryptoOnrampWidget defaultDestination={{ address: 'ton' }} defaultSource={{ chain, address }} />` handles all of this. Use the hooks only for custom UX, and own loading/error per step like swap.
+
+### Custom providers
+
+`useCustomProvider<T>(id)` retrieves an app-defined provider you registered yourself (`providers: [myProvider]`, where `myProvider.type === 'custom'`). **The argument is a positional string id, not an object** — unlike every other hook here. Pass your provider's interface as the generic to narrow the return type:
+
+```tsx
+const provider = useCustomProvider<MyProvider>('my-provider'); // MyProvider | undefined
+if (!provider) return <p>Provider not registered</p>;
+```
+
+There is **no runtime check** that the registered provider matches `T` — the generic is a cast. You own ensuring the id maps to the shape you claim.
+
 ## Drop-in Components
 
 Full-featured React components from `@ton/appkit-react`. They handle their own state, loading, and errors:
@@ -196,6 +237,7 @@ Full-featured React components from `@ton/appkit-react`. They handle their own s
 | `<SendJettonButton jetton={{address, symbol, decimals}} recipientAddress amount comment? onSuccess? onError? />` | Send jettons. ⚠ `jetton` is an **object** with `{ address, symbol, decimals }` — NOT a bare address string. `address` is the jetton master. `amount` is human-readable (e.g. `"5"` for 5 USDT); decimals come from the prop, not metadata. NFT transfers go via `useTransferNft` hook — no drop-in button. |
 | `<SwapWidget tokens={...} />` | Full swap UI |
 | `<StakingWidget />` | Full staking UI |
+| `<CryptoOnrampWidget defaultDestination defaultSource />` | Full onramp UI (deposit address, quote, status). Needs an onramp provider registered. `defaultDestination` = `{ address: 'ton' \| jettonMaster }`, `defaultSource` = `{ chain: Caip2ByNetwork.X, address: 'native' \| token }`. |
 | `<NftItem nft={...} />` | NFT card (image, name, collection, badge) |
 | `<TransactionProgress boc={...} />` | Tracks tx until on-chain finalized |
 
@@ -217,6 +259,7 @@ For `invalidateQueries` / `removeQueries`. TanStack prefix-matches on the **firs
 | `['jetton-balance']` / `['jetton-info']` / `['jetton-wallet-address']` | kebab-case keys with `{ jettonAddress, ownerAddress }` | Jetton state (kebab-case — camelCase will silently match nothing) |
 | `['stakedBalance']` / `['stakingProviderInfo']` / `['stakingQuote']` | camelCase keys | Staking |
 | `['swapQuote']` | `['swapQuote', { amount, from, to }]` | Swap quotes |
+| `['crypto-onramp-quote']` / `['crypto-onramp-status']` / `['crypto-onramp-supported-currencies']` | kebab-case keys | Onramp quotes / deposit status / currency lists |
 
 ## Four Critical Patterns
 

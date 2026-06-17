@@ -40,6 +40,8 @@ Do NOT glob directories listed below — the structure is documented. Do NOT rea
 **For new actions, queries, hooks**: import walletkit types through the local appkit barrels rather than `@ton/walletkit` directly:
 - staking → `../../staking` (barrel: `src/staking/index.ts`)
 - swap → `../../swap` (barrel: `src/swap/index.ts`)
+- onramp → `../../crypto-onramp` (barrel: `src/crypto-onramp/index.ts`; provider factories live in sub-paths `crypto-onramp/decent`, `crypto-onramp/layerswap`)
+- custom providers → `../../providers` (barrel: `src/providers/index.ts` — re-exports `CustomProvider`, `CustomProvidersManager`)
 - streaming → `../../core/streaming` (barrel: `src/core/streaming/index.ts`)
 
 If you need a walletkit type that isn't re-exported yet, add the re-export to the matching domain barrel first, then import from there.
@@ -57,6 +59,8 @@ If you need a walletkit type that isn't re-exported yet, add the re-export to th
 | balances | `actions/balances/` | `features/balances/` | `get-balance-by-address` → query `get-balance-by-address` → `use-balance(-by-address)` (the unparameterized `get-balance` is a thin wrapper that calls the `-by-address` action with the selected wallet) |
 | staking | `actions/staking/` | `features/staking/` | `get-staked-balance` → query `get-staked-balance` → `use-staked-balance` |
 | swap | `actions/swap/` | `features/swap/` | `get-swap-quote` → query `get-swap-quote` → `use-swap-quote` |
+| onramp (crypto) | `actions/crypto-onramp/` | `features/onramp/` | `get-crypto-onramp-quote` → query `get-crypto-onramp-quote` → `use-crypto-onramp-quote`. Provider list is watch-based (`watch-crypto-onramp-providers` → `use-crypto-onramp-providers`, no query). |
+| providers (custom) | `actions/providers/` | `features/providers/` | `get-custom-provider` → **no query** (watch/snapshot) → `use-custom-provider` (`useSyncExternalStore` over `watch-custom-providers`) |
 | jettons | `actions/jettons/` | `features/jettons/` | `get-jettons-by-address` → query `get-jettons-by-address` → `use-jettons-by-address` (`use-jettons` is a thin wrapper for the selected wallet) |
 | nft | `actions/nft/` | `features/nft/` | `get-nfts-by-address` → query `get-nfts-by-address` → `use-nfts(-by-address)` |
 | signing | `actions/signing/` | `features/signing/` | `sign-text` → mutation `sign-text` → `use-sign-text` |
@@ -86,6 +90,9 @@ For cache invalidation/removal. TanStack Query prefix-matches on first element:
 | `['stakingProviderInfo', ...]` | staking provider info |
 | `['stakingQuote', ...]` | staking quotes |
 | `['swapQuote', { amount, from, to }]` | swap quotes |
+| `['crypto-onramp-quote', ...]` | onramp quotes (kebab-case) |
+| `['crypto-onramp-status', ...]` | onramp deposit status (kebab-case) |
+| `['crypto-onramp-supported-currencies', ...]` | onramp currency lists (kebab-case) |
 | `['blockNumber', ...]` | block number |
 | `['transactionStatus', ...]` | transaction status |
 
@@ -140,7 +147,7 @@ Existing helpers: `demo/examples/src/__tests__/test-utils.tsx` (`createWrapper`)
 5. **`pnpm docs:update`** after example/template changes, then `pnpm quality`.
 6. **Files under 200-250 lines.**
 7. **Cache after mutations** — `invalidateQueries` after transfers, `removeQueries` after disconnect. React-layer concern. Use query key prefixes from table above.
-8. **Streaming is opt-in, per network** — register a streaming provider for EACH network the app uses (mainnet AND testnet separately) via `AppKit.registerProvider()` (types: `swap`/`staking`/`streaming`) or `appKit.streamingManager.registerProvider({ network, ... })`. Without it `useWatchBalance` silently skips. One provider doesn't cover other networks.
+8. **Streaming is opt-in, per network** — register a streaming provider for EACH network the app uses (mainnet AND testnet separately) via `AppKit.registerProvider()` (provider `type`s: `swap`/`staking`/`streaming`/`crypto-onramp`/`custom`; `registerProvider` routes by `provider.type` to the matching manager) or `appKit.streamingManager.registerProvider({ network, ... })`. Without it `useWatchBalance` silently skips. One provider doesn't cover other networks.
 9. **Serialize BigInt** — `.toString()` at boundaries.
 10. **SSR** — `'use client'` for providers, gate wallet UI until mount (no `ssr` option on `AppKitConfig`).
 11. **Network mismatch** — compare `defaultNetwork`, `useNetwork()`, tx network. Mainnet: `-239`, testnet: `-3`.
