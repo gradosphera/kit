@@ -14,6 +14,8 @@ import type {
     ConnectEventError,
     DAppInfo,
     DisconnectEvent,
+    Jetton,
+    JettonInfo,
     JettonsResponse,
     Network,
     NFT,
@@ -257,6 +259,22 @@ export interface GetJettonBalanceArgs {
 export interface GetJettonWalletAddressArgs {
     walletId: string;
     jettonAddress: string;
+}
+
+export interface GetJettonInfoArgs {
+    address: string;
+    network: Network;
+}
+
+export interface GetAddressJettonsArgs {
+    userAddress: string;
+    network: Network;
+    offset?: number;
+    limit?: number;
+}
+
+export interface ValidateJettonAddressArgs {
+    address: string;
 }
 
 export interface ProcessInternalBrowserRequestArgs {
@@ -538,6 +556,9 @@ export interface WalletKitBridgeApi {
     createTransferJettonTransaction(args: CreateTransferJettonTransactionArgs): PromiseOrValue<TransactionRequest>;
     getJettonBalance(args: GetJettonBalanceArgs): PromiseOrValue<string>;
     getJettonWalletAddress(args: GetJettonWalletAddressArgs): PromiseOrValue<TONUserFriendlyAddress>;
+    getJettonInfo(args: GetJettonInfoArgs): PromiseOrValue<JettonInfo | null>;
+    getAddressJettons(args: GetAddressJettonsArgs): PromiseOrValue<Jetton[]>;
+    validateJettonAddress(args: ValidateJettonAddressArgs): PromiseOrValue<{ valid: boolean }>;
     processInternalBrowserRequest(args: ProcessInternalBrowserRequestArgs): PromiseOrValue<TonConnectEventPayload>;
     emitBrowserPageStarted(args: EmitBrowserPageArgs): PromiseOrValue<{ success: boolean }>;
     emitBrowserPageFinished(args: EmitBrowserPageArgs): PromiseOrValue<{ success: boolean }>;
