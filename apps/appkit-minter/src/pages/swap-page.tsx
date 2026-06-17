@@ -17,12 +17,12 @@ import { USDT_MASTER_MAINNET } from '@/core/constants/tokens';
 const TOKENS: AppkitUIToken[] = [
     {
         id: 'ton',
-        symbol: 'TON',
-        name: 'Toncoin',
+        symbol: 'GRAM',
+        name: 'Gram',
         decimals: 9,
         address: 'ton',
         network: Network.mainnet(),
-        logo: './tokens/ton.png',
+        logo: './tokens/gram.svg',
     },
     {
         id: 'usdt',
@@ -65,7 +65,7 @@ const TOKENS: AppkitUIToken[] = [
     {
         id: 'tston',
         symbol: 'tsTON',
-        name: 'Tonstakers TON',
+        name: 'Tonstakers GRAM',
         decimals: 9,
         address: 'EQC98_qAmNEptUtPc7W6xdHh_ZHrBUFpw5Ft_IzNU20QAJav',
         network: Network.mainnet(),
@@ -108,8 +108,8 @@ export const SwapPage: React.FC = () => {
                     tokens={TOKENS}
                     network={Network.mainnet()}
                     fiatSymbol="$"
-                    defaultFromSymbol="TON"
-                    defaultToSymbol="USDT"
+                    defaultFromSymbol="GRAM"
+                    defaultToSymbol="USD₮"
                 />
             </div>
         </Layout>

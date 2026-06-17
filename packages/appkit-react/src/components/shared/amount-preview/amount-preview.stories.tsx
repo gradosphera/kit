@@ -14,8 +14,8 @@ import type { AppkitUIToken } from '../../../types/appkit-ui-token';
 
 const tonToken: AppkitUIToken = {
     id: 'ton',
-    symbol: 'TON',
-    name: 'Toncoin',
+    symbol: 'GRAM',
+    name: 'Gram',
     decimals: 9,
     address: 'ton',
     network: Network.mainnet(),
