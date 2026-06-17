@@ -47,7 +47,11 @@ export const api = {
     getWalletAddress: wallets.getWalletAddress,
     getWalletNetwork: wallets.getWalletNetwork,
     getWalletPublicKey: wallets.getWalletPublicKey,
+    getWalletStateInit: wallets.getWalletStateInit,
     getSignedSignMessage: wallets.getSignedSignMessage,
+    getSignedSendTransaction: wallets.getSignedSendTransaction,
+    getSignedSignData: wallets.getSignedSignData,
+    getSignedTonProof: wallets.getSignedTonProof,
     removeWallet: wallets.removeWallet,
     getBalance: wallets.getBalance,
 
@@ -132,9 +136,11 @@ export const api = {
 
     createTonApiGaslessProvider: gasless.createTonApiGaslessProvider,
     registerGaslessProvider: gasless.registerGaslessProvider,
+    removeGaslessProvider: gasless.removeGaslessProvider,
     setDefaultGaslessProvider: gasless.setDefaultGaslessProvider,
     getRegisteredGaslessProviders: gasless.getRegisteredGaslessProviders,
     hasGaslessProvider: gasless.hasGaslessProvider,
+    getGaslessProviderSupportedNetworks: gasless.getGaslessProviderSupportedNetworks,
     getGaslessMetadata: gasless.getGaslessMetadata,
     getGaslessConfig: gasless.getGaslessConfig,
     getGaslessQuote: gasless.getGaslessQuote,
