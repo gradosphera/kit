@@ -718,7 +718,7 @@ const quote = await getGaslessQuote(appKit, {
         {
             address: 'EQ...jetton_wallet_address',
             amount: '60000000', // 0.06 TON gas budget
-            payload: 'te6cckEBAQEAAgAAAA==' as never,
+            payload: asBase64('te6cckEBAQEAAgAAAA=='),
         },
     ],
 });
@@ -910,6 +910,24 @@ const unsubscribe = watchSignMessageSupport(appKit, {
 });
 
 // Later: unsubscribe();
+```
+
+### `getCustomProvider`
+
+Get a registered custom provider by id.
+
+```ts
+const isMyCustomProvider = (provider: CustomProvider): provider is MyCustomProvider =>
+    typeof (provider as MyCustomProvider).customAction === 'function';
+
+const provider = getCustomProvider(appKit, {
+    id: 'my-provider',
+    guard: isMyCustomProvider,
+});
+
+if (provider) {
+    console.log('Custom provider is available');
+}
 ```
 
 <!--
