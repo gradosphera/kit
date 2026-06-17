@@ -750,9 +750,7 @@ return (
 Hook to get static metadata for a crypto-onramp provider (display name, logo, url).
 
 ```tsx
-const { data: metadata } = useCryptoOnrampProviderMetadata({
-    providerId: 'layerswap',
-});
+const metadata = useCryptoOnrampProviderMetadata({ providerId: 'layerswap' });
 return <div>Provider name: {metadata?.name}</div>;
 ```
 
@@ -1382,6 +1380,20 @@ Hook to check whether the selected wallet advertises the `SignMessage` feature (
 const hasSignMessageSupport = useSignMessageSupport();
 
 return <p>{hasSignMessageSupport ? 'Wallet supports SignMessage' : 'SignMessage not supported'}</p>;
+```
+
+### `useCustomProvider`
+
+Hook to get a registered custom provider by id.
+
+```tsx
+const provider = useCustomProvider<MyCustomProvider>('my-provider');
+
+if (!provider) {
+    return <div>Custom provider not registered</div>;
+}
+
+return <div>Custom provider is ready</div>;
 ```
 
 <!--

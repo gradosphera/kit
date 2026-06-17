@@ -9,7 +9,7 @@
 import type { Network } from '@ton/appkit';
 
 export interface AppkitUIToken {
-    /** Unique identifier for the token, used for section grouping in the token selector. */
+    /** Unique identifier for the token, used for section grouping */
     id: string;
     /** Token symbol, e.g. "GRAM" */
     symbol: string;

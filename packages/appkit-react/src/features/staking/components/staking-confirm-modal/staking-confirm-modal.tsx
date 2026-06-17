@@ -52,7 +52,7 @@ const toUIToken = (
 ): AppkitUIToken | undefined => {
     if (!token || !network) return undefined;
     return {
-        id: token.address,
+        id: `${network.chainId}:${token.address}`,
         symbol: token.ticker,
         name: jettonInfo?.name ?? token.ticker,
         decimals: token.decimals,

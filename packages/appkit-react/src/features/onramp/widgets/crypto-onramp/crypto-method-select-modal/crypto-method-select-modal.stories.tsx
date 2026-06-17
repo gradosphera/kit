@@ -49,7 +49,7 @@ const METHODS: CryptoOnrampSourceCurrency[] = [
         name: 'Ethereum',
         chain: 'eip155:1',
         decimals: 18,
-        address: '0x0000000000000000000000000000000000000000',
+        address: 'native',
         logo: 'https://assets.coingecko.com/coins/images/279/standard/ethereum.png',
     },
 ];
@@ -72,10 +72,25 @@ export const Default: Story = {
     },
 };
 
+/** Nothing came from the API — renders the "unavailable" empty state. */
 export const Empty: Story = {
     args: {
         open: true,
         methods: [],
+        onClose: () => {},
+        onSelect: () => {},
+    },
+};
+
+/**
+ * Currencies are still loading. The widget disables opening the modal in this state,
+ * so this is a fallback for custom renders that open it anyway.
+ */
+export const Loading: Story = {
+    args: {
+        open: true,
+        methods: [],
+        isLoading: true,
         onClose: () => {},
         onSelect: () => {},
     },

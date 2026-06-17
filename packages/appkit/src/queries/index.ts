@@ -72,16 +72,6 @@ export {
     type GetCryptoOnrampSupportedCurrenciesQueryFnData,
     type GetCryptoOnrampSupportedCurrenciesQueryKey,
 } from './crypto-onramp/get-crypto-onramp-supported-currencies';
-export {
-    getCryptoOnrampProviderMetadataQueryOptions,
-    getCryptoOnrampProviderMetadataQueryKey,
-    type GetCryptoOnrampProviderMetadataQueryConfig,
-    type GetCryptoOnrampProviderMetadataQueryOptions,
-    type GetCryptoOnrampProviderMetadataData,
-    type GetCryptoOnrampProviderMetadataErrorType,
-    type GetCryptoOnrampProviderMetadataQueryFnData,
-    type GetCryptoOnrampProviderMetadataQueryKey,
-} from './crypto-onramp/get-crypto-onramp-provider-metadata';
 
 // Jettons
 export {
@@ -210,24 +200,6 @@ export {
     type BuildSwapTransactionMutateAsync,
     type BuildSwapTransactionVariables,
 } from './swap/build-swap-transaction';
-
-// Onramp
-export {
-    getOnrampQuoteQueryOptions,
-    type GetOnrampQuoteQueryConfig,
-    type GetOnrampQuoteQueryOptions,
-    type GetOnrampQuoteData,
-    type GetOnrampQuoteErrorType,
-    type GetOnrampQuoteQueryFnData,
-    type GetOnrampQuoteQueryKey,
-} from './onramp/get-onramp-quote';
-export {
-    buildOnrampUrlMutationOptions,
-    type BuildOnrampUrlMutationOptions,
-    type BuildOnrampUrlData,
-    type BuildOnrampUrlErrorType,
-    type BuildOnrampUrlVariables,
-} from './onramp/build-onramp-url';
 
 // Gasless
 export {

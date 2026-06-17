@@ -6,7 +6,7 @@
  *
  */
 
-import { SwapManager, StreamingManager, OnrampManager, CryptoOnrampManager } from '@ton/walletkit';
+import { SwapManager, StreamingManager, CryptoOnrampManager } from '@ton/walletkit';
 import type {
     ProviderInput,
     SwapProviderInterface,
@@ -30,6 +30,8 @@ import { Network } from '../../../types/network';
 import type { AppKitCache } from '../../cache';
 import { LruAppKitCache } from '../../cache';
 import type { AppKitProvider } from '../../../types/provider';
+import { CustomProvidersManager } from '../../../providers';
+import type { CustomProvider } from '../../../providers';
 
 /**
  * Central hub for wallet management.
@@ -41,9 +43,9 @@ export class AppKit {
     readonly walletsManager: WalletsManager;
     readonly swapManager: SwapManager;
     readonly stakingManager: StakingManager;
-    readonly onrampManager: OnrampManager;
     readonly cryptoOnrampManager: CryptoOnrampManager;
     readonly gaslessManager: GaslessManager;
+    readonly customProvidersManager: CustomProvidersManager;
 
     readonly networkManager: AppKitNetworkManager;
     readonly streamingManager: StreamingManager;
@@ -67,9 +69,9 @@ export class AppKit {
 
         this.swapManager = new SwapManager(() => this.createFactoryContext());
         this.stakingManager = new StakingManager(() => this.createFactoryContext());
-        this.onrampManager = new OnrampManager(() => this.createFactoryContext());
         this.cryptoOnrampManager = new CryptoOnrampManager(() => this.createFactoryContext());
         this.gaslessManager = new GaslessManager(() => this.createFactoryContext());
+        this.customProvidersManager = new CustomProvidersManager(() => this.createFactoryContext());
         this.streamingManager = new StreamingManager(() => this.createFactoryContext());
 
         if (config.connectors) {
@@ -145,6 +147,9 @@ export class AppKit {
                 break;
             case 'gasless':
                 this.gaslessManager.registerProvider(provider as GaslessProviderInterface);
+                break;
+            case 'custom':
+                this.customProvidersManager.registerProvider(provider as CustomProvider);
                 break;
             default:
                 throw new Error('Unknown provider type');

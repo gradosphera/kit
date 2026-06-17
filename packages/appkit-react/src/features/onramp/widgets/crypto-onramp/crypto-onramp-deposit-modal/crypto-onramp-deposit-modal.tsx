@@ -45,8 +45,8 @@ export interface CryptoOnrampDepositModalProps {
     refundAddress?: string;
     /** URL of the token logo to embed in the QR code center */
     tokenLogo?: string;
-    /** Optional chain-specific warning message */
-    chainWarning?: string;
+    /** Display name of the source network. When provided (with `symbol`), the standard chain warning is shown. */
+    networkName?: string;
     /** Symbol of the target token the user is buying */
     targetSymbol?: string;
     /** User's formatted balance of the target token */
@@ -77,7 +77,7 @@ export const CryptoOnrampDepositModal: FC<CryptoOnrampDepositModalProps> = ({
     memo,
     refundAddress,
     tokenLogo,
-    chainWarning,
+    networkName,
     depositStatus,
     targetSymbol,
     targetBalance,
@@ -138,7 +138,16 @@ export const CryptoOnrampDepositModal: FC<CryptoOnrampDepositModalProps> = ({
                     </div>
                 )}
 
-                <p className={styles.infoTitle}>{t('cryptoOnramp.sendExactAmount')}</p>
+                {networkName && symbol && (
+                    <div className={styles.warning}>
+                        <span className={styles.warningIcon}>
+                            <WarningIcon />
+                        </span>
+                        <p className={styles.warningText}>
+                            {t('cryptoOnramp.chainWarning', { symbol, network: networkName })}
+                        </p>
+                    </div>
+                )}
 
                 <div className={styles.infoCard}>
                     <div className={styles.infoRow}>
@@ -147,7 +156,7 @@ export const CryptoOnrampDepositModal: FC<CryptoOnrampDepositModalProps> = ({
                             <span className={styles.infoValue}>
                                 {amount} {symbol}
                             </span>
-                            <CopyButton value={amount} aria-label="Copy amount" />
+                            <CopyButton value={amount} aria-label={t('cryptoOnramp.copyAmount')} />
                         </div>
                     </div>
 
@@ -157,7 +166,7 @@ export const CryptoOnrampDepositModal: FC<CryptoOnrampDepositModalProps> = ({
                         <span className={styles.infoLabel}>{t('cryptoOnramp.toThisAddress')}</span>
                         <div className={styles.infoValueRow}>
                             <span className={styles.infoValue}>{truncateAddress(address)}</span>
-                            <CopyButton value={address} aria-label="Copy address" />
+                            <CopyButton value={address} aria-label={t('cryptoOnramp.copyAddress')} />
                         </div>
                     </div>
 
@@ -168,7 +177,10 @@ export const CryptoOnrampDepositModal: FC<CryptoOnrampDepositModalProps> = ({
                                 <span className={styles.infoLabel}>{t('cryptoOnramp.refundAddress')}</span>
                                 <div className={styles.infoValueRow}>
                                     <span className={styles.infoValue}>{truncateAddress(refundAddress)}</span>
-                                    <CopyButton value={refundAddress} aria-label="Copy refund address" />
+                                    <CopyButton
+                                        value={refundAddress}
+                                        aria-label={t('cryptoOnramp.copyRefundAddress')}
+                                    />
                                 </div>
                             </div>
                         </>
@@ -181,21 +193,12 @@ export const CryptoOnrampDepositModal: FC<CryptoOnrampDepositModalProps> = ({
                                 <span className={styles.infoLabel}>{t('cryptoOnramp.memoTag')}</span>
                                 <div className={styles.infoValueRow}>
                                     <span className={styles.infoValue}>{memo}</span>
-                                    <CopyButton value={memo} aria-label="Copy memo" />
+                                    <CopyButton value={memo} aria-label={t('cryptoOnramp.copyMemo')} />
                                 </div>
                             </div>
                         </>
                     )}
                 </div>
-
-                {chainWarning && (
-                    <div className={styles.warning}>
-                        <span className={styles.warningIcon}>
-                            <WarningIcon />
-                        </span>
-                        <p className={styles.warningText}>{chainWarning}</p>
-                    </div>
-                )}
 
                 {targetSymbol && (
                     <div className={styles.infoCard}>

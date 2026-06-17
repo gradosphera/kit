@@ -8,25 +8,26 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Caip2ByNetwork } from '@ton/appkit';
-import type { CryptoOnrampDestinationCurrency, CryptoOnrampSourceCurrency } from '@ton/appkit';
 
+import type { CryptoOnrampDestinationRef, CryptoOnrampSourceRef } from '../crypto-onramp-widget-provider';
 import { CryptoOnrampWidget } from './crypto-onramp-widget';
 
-const USDT_ON_TON: CryptoOnrampDestinationCurrency = {
+const USDT_ON_TON: CryptoOnrampDestinationRef = {
     address: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs',
-    symbol: 'USDT',
-    name: 'Tether',
-    decimals: 6,
-    logo: 'https://cdn.layerswap.io/layerswap/currencies/usdt.png',
 };
 
-const USDT0_ON_ARBITRUM: CryptoOnrampSourceCurrency = {
+const NATIVE_TON: CryptoOnrampDestinationRef = {
+    address: 'ton',
+};
+
+const USDT0_ON_ARBITRUM: CryptoOnrampSourceRef = {
     chain: Caip2ByNetwork.ArbitrumMainnet,
     address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
-    symbol: 'USDT0',
-    name: 'Tether USD0',
-    decimals: 6,
-    logo: 'https://cdn.layerswap.io/layerswap/currencies/usdt0.png',
+};
+
+const NATIVE_ON_ARBITRUM: CryptoOnrampSourceRef = {
+    chain: Caip2ByNetwork.ArbitrumMainnet,
+    address: 'native',
 };
 
 const meta: Meta<typeof CryptoOnrampWidget> = {
@@ -36,11 +37,15 @@ const meta: Meta<typeof CryptoOnrampWidget> = {
     argTypes: {
         defaultDestination: {
             control: 'object',
-            description: 'Optional initial destination (TON-side) currency. Omit to start with empty selector.',
+            description:
+                'Optional default destination reference (`{ address }`), resolved against the loaded currency list. ' +
+                "Use `{ address: 'ton' }` for native Toncoin.",
         },
         defaultSource: {
             control: 'object',
-            description: 'Optional initial source currency. Omit to start with empty selector.',
+            description:
+                'Optional default source reference (`{ address, chain? }`), resolved against the loaded currency list. ' +
+                "Use `{ address: 'native', chain }` for a chain's native coin.",
         },
     },
 };
@@ -49,22 +54,34 @@ export default meta;
 type Story = StoryObj<typeof CryptoOnrampWidget>;
 
 /**
- * No defaults — selectors start empty. While `/supportedCurrencies` is loading the pills
- * show skeletons; once data arrives the auto-pick effect seeds them with the first
- * available token/method.
+ * No defaults — while `/supportedCurrencies` is loading the pills show skeletons and the
+ * amount caption reads "Loading..."; once data arrives the first available token/method
+ * is auto-picked. The "Select token" empty state only shows when the lists come back empty.
  */
 export const Default: Story = {
     args: {},
 };
 
 /**
- * Consumer-supplied defaults — selectors render with the chosen token/method immediately
- * on first paint. Auto-pick is skipped because the state isn't null. Use the controls
- * panel to swap the objects.
+ * Consumer-supplied default references — once the currency list loads, the matching
+ * entries are selected instead of the first ones. Unmatched references fall back to
+ * the first entry. Use the controls panel to tweak the references.
  */
 export const WithPresetCurrencies: Story = {
     args: {
         defaultDestination: USDT_ON_TON,
         defaultSource: USDT0_ON_ARBITRUM,
+    },
+};
+
+/**
+ * Native coins as defaults via aliases: `'ton'` for the destination (Toncoin) and `'native'` for
+ * the source (the selected chain's coin). Both are resolved against the loaded currency list,
+ * regardless of the raw markers the active provider uses.
+ */
+export const WithNativeDefaults: Story = {
+    args: {
+        defaultDestination: NATIVE_TON,
+        defaultSource: NATIVE_ON_ARBITRUM,
     },
 };

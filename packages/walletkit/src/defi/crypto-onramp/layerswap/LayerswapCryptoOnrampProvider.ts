@@ -26,12 +26,14 @@ import {
     DEFAULT_LAYERSWAP_SUPPORTED_CHAINS,
     LAYERSWAP_DESTINATION_NETWORK,
     LAYERSWAP_DESTINATION_TOKENS,
+    formatBaseUnits,
     isErrorResponse,
     mapLayerswapErrorCode,
     mapStatus,
+    parseBaseUnits,
+    toLayerswapDestinationToken,
 } from './utils';
 import type { LayerswapChainConfig } from './utils';
-import { formatUnits, parseUnits } from '../../../utils/units';
 
 const LAYERSWAP_API_URL = 'https://api.layerswap.io/api/v2';
 
@@ -92,7 +94,7 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
         return [Network.mainnet()];
     }
 
-    async getMetadata() {
+    getMetadata() {
         return {
             name: 'Layerswap',
             url: 'https://layerswap.io',
@@ -144,23 +146,14 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
             );
         }
 
-        const baseUnits = BigInt(params.amount);
-
-        if (baseUnits < 0n) {
-            throw new CryptoOnrampError(
-                `Layerswap: amount "${params.amount}" is not a non-negative integer in base units`,
-                CryptoOnrampErrorCode.InvalidParams,
-            );
-        }
-
-        const amountDecimal = formatUnits(baseUnits, sourceCurrency.decimals);
+        const amountDecimal = formatBaseUnits(params.amount, sourceCurrency.decimals);
 
         const body = {
             amount: amountDecimal,
             source_network: chainConfig.slug,
             destination_network: LAYERSWAP_DESTINATION_NETWORK,
             source_token: sourceCurrency.symbol,
-            destination_token: targetCurrency.symbol,
+            destination_token: toLayerswapDestinationToken(targetCurrency.symbol),
             destination_address: recipientAddress,
             ...(refundAddress ? { source_address: refundAddress } : {}),
             refuel: false,
@@ -206,11 +199,7 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
             );
         }
 
-        const targetAmountBaseUnits = parseUnits(
-            data.quote.receive_amount.toString(),
-            targetCurrency.decimals,
-        ).toString();
-
+        const targetAmountBaseUnits = parseBaseUnits(data.quote.receive_amount, targetCurrency.decimals);
         const rate =
             data.quote.requested_amount > 0
                 ? (data.quote.receive_amount / data.quote.requested_amount).toString()
@@ -328,14 +317,14 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
         const destination = this.destinationTokens;
 
         const results = await Promise.allSettled(
-            destination.map((dest) => this.fetchSources(LAYERSWAP_DESTINATION_NETWORK, dest.symbol)),
+            destination.map((dest) =>
+                this.fetchSources(LAYERSWAP_DESTINATION_NETWORK, toLayerswapDestinationToken(dest.symbol)),
+            ),
         );
 
         const sourceMap = new Map<string, CryptoOnrampSourceCurrency>();
-        let anyFulfilled = false;
         for (const result of results) {
             if (result.status !== 'fulfilled') continue;
-            anyFulfilled = true;
             for (const network of result.value) {
                 const caip2 = slugToCaip2[network.name];
                 if (!caip2) continue;
@@ -346,17 +335,6 @@ export class LayerswapCryptoOnrampProvider extends CryptoOnrampProvider<undefine
                     if (!sourceMap.has(key)) sourceMap.set(key, mapped);
                 }
             }
-        }
-
-        if (!anyFulfilled && results.length > 0) {
-            const firstRejection = results.find(
-                (result): result is PromiseRejectedResult => result.status === 'rejected',
-            );
-            throw new CryptoOnrampError(
-                'Layerswap: failed to fetch supported sources for all destinations',
-                CryptoOnrampErrorCode.ProviderError,
-                firstRejection?.reason,
-            );
         }
 
         return { source: Array.from(sourceMap.values()), destination };
@@ -427,7 +405,7 @@ const mapLayerswapTokenToSource = (
     caip2: string,
 ): CryptoOnrampSourceCurrency => ({
     chain: caip2,
-    address: token.contract ?? '',
+    address: token.contract ?? 'native',
     symbol: token.symbol,
     name: token.display_asset ?? token.symbol,
     decimals: token.decimals,

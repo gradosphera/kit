@@ -86,6 +86,9 @@ export const api = {
     createTransferJettonTransaction: jettons.createTransferJettonTransaction,
     getJettonBalance: jettons.getJettonBalance,
     getJettonWalletAddress: jettons.getJettonWalletAddress,
+    getJettonInfo: jettons.getJettonInfo,
+    getAddressJettons: jettons.getAddressJettons,
+    validateJettonAddress: jettons.validateJettonAddress,
 
     emitBrowserPageStarted: browser.emitBrowserPageStarted,
     emitBrowserPageFinished: browser.emitBrowserPageFinished,

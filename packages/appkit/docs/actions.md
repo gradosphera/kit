@@ -429,56 +429,6 @@ const result = await transferNft(appKit, {
 console.log('NFT Transfer Result:', result);
 ```
 
-## Onramp
-
-### `getOnrampManager`
-
-Get the `OnrampManager` instance.
-
-### `getOnrampProvider`
-
-Get a specific onramp provider by its ID.
-
-### `getOnrampProviders`
-
-Get all registered onramp providers.
-
-### `watchOnrampProviders`
-
-Watch for new onramp providers registration.
-
-### `getOnrampQuote`
-
-Get an onramp quote from registered providers.
-
-```ts
-const quote = await getOnrampQuote(appKit, {
-    fiatCurrency: 'USD',
-    cryptoCurrency: 'TON',
-    amount: '100',
-    isFiatAmount: true,
-});
-console.log('Onramp Quote:', quote);
-```
-
-### `buildOnrampUrl`
-
-Build an onramp URL for redirecting the user to the provider.
-
-```ts
-const quote = await getOnrampQuote(appKit, {
-    fiatCurrency: 'USD',
-    cryptoCurrency: 'TON',
-    amount: '100',
-});
-
-const url = await buildOnrampUrl(appKit, {
-    quote,
-    userAddress: 'UQ...wallet-address...',
-});
-console.log('Onramp URL:', url);
-```
-
 ## Crypto Onramp
 
 ### `getCryptoOnrampProvider`
@@ -507,7 +457,7 @@ console.log(
 Get static metadata for a crypto-onramp provider (display name, logo, url).
 
 ```ts
-const metadata = await getCryptoOnrampProviderMetadata(appKit, {
+const metadata = getCryptoOnrampProviderMetadata(appKit, {
     providerId: 'layerswap',
 });
 console.log('Crypto onramp provider metadata:', metadata);
@@ -806,7 +756,7 @@ const quote = await getGaslessQuote(appKit, {
         {
             address: 'EQ...jetton_wallet_address',
             amount: '60000000', // 0.06 TON gas budget
-            payload: 'te6cckEBAQEAAgAAAA==' as never,
+            payload: asBase64('te6cckEBAQEAAgAAAA=='),
         },
     ],
 });
@@ -998,6 +948,20 @@ const unsubscribe = watchSignMessageSupport(appKit, {
 });
 
 // Later: unsubscribe();
+```
+
+### `getCustomProvider`
+
+Get a registered custom provider by id.
+
+```tsx
+const provider = getCustomProvider<MyCustomProvider>(appKit, {
+    id: 'my-provider',
+});
+
+if (provider) {
+    console.log('Custom provider is available');
+}
 ```
 
 <!--

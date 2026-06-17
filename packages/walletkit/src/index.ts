@@ -22,7 +22,6 @@ export { JettonsManager } from './core/JettonsManager';
 export { DefiError, DefiErrorCode } from './defi/errors';
 export { SwapManager, SwapProvider, SwapError, SwapErrorCode } from './defi/swap';
 export { StakingManager, StakingProvider, StakingError, StakingErrorCode } from './defi/staking';
-export { OnrampManager, OnrampProvider, OnrampError, OnrampErrorCode } from './defi/onramp';
 export {
     CryptoOnrampManager,
     CryptoOnrampProvider,
@@ -174,3 +173,5 @@ export { StreamingManager } from './streaming';
 export type { StreamingProvider, StreamingProviderFactory } from './api/interfaces/StreamingProvider';
 export type { StreamingAPI } from './api/interfaces/StreamingAPI';
 export type { ProviderFactoryContext } from './types/factory';
+export { CustomProvidersManager } from './providers';
+export type { CustomProvider } from './providers';
