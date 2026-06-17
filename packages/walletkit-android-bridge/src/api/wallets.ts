@@ -69,7 +69,7 @@ class ProxyWalletAdapter implements WalletAdapter {
         const result = await bridgeRequest('adapterSignTransaction', {
             adapterId: this.adapterId,
             input: JSON.stringify(input),
-            fakeSignature: options?.fakeSignature ?? false,
+            fakeSignature: options?.fakeSignature,
         });
         if (!result) throw new Error('adapterSignTransaction: no result from native');
         return result as Base64String;
@@ -83,7 +83,7 @@ class ProxyWalletAdapter implements WalletAdapter {
         const result = await bridgeRequest('adapterSignData', {
             adapterId: this.adapterId,
             input: JSON.stringify(input),
-            fakeSignature: options?.fakeSignature ?? false,
+            fakeSignature: options?.fakeSignature,
         });
         if (!result) throw new Error('adapterSignData: no result from native');
         return result as Hex;
@@ -93,7 +93,7 @@ class ProxyWalletAdapter implements WalletAdapter {
         const result = await bridgeRequest('adapterSignTonProof', {
             adapterId: this.adapterId,
             input: JSON.stringify(input),
-            fakeSignature: options?.fakeSignature ?? false,
+            fakeSignature: options?.fakeSignature,
         });
         if (!result) throw new Error('adapterSignTonProof: no result from native');
         return result as Hex;
@@ -150,19 +150,19 @@ export async function getSignedSendTransaction(args: {
     fakeSignature?: boolean;
 }) {
     return wallet(args.walletId, 'getSignedSendTransaction', args.input, {
-        fakeSignature: args.fakeSignature ?? false,
+        fakeSignature: args.fakeSignature,
     });
 }
 
 export async function getSignedSignData(args: { walletId: string; input: PreparedSignData; fakeSignature?: boolean }) {
     return wallet(args.walletId, 'getSignedSignData', args.input, {
-        fakeSignature: args.fakeSignature ?? false,
+        fakeSignature: args.fakeSignature,
     });
 }
 
 export async function getSignedTonProof(args: { walletId: string; input: ProofMessage; fakeSignature?: boolean }) {
     return wallet(args.walletId, 'getSignedTonProof', args.input, {
-        fakeSignature: args.fakeSignature ?? false,
+        fakeSignature: args.fakeSignature,
     });
 }
 
