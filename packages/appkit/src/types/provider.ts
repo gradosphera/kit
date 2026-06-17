@@ -10,6 +10,7 @@ import type {
     SwapProviderInterface,
     StakingProviderInterface,
     StreamingProvider,
+    CryptoOnrampProviderInterface,
     GaslessProviderInterface,
     CustomProvider,
 } from '@ton/walletkit';
@@ -21,5 +22,6 @@ export type AppKitProvider =
     | SwapProviderInterface
     | StakingProviderInterface
     | StreamingProvider
+    | CryptoOnrampProviderInterface
     | GaslessProviderInterface
     | CustomProvider;

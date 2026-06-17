@@ -13,6 +13,7 @@ import { FlowPreview } from './flow-preview';
 import type { AppkitUIToken } from '../../../types/appkit-ui-token';
 
 const tonToken: AppkitUIToken = {
+    id: 'ton',
     symbol: 'GRAM',
     name: 'Gram',
     decimals: 9,
@@ -22,6 +23,7 @@ const tonToken: AppkitUIToken = {
 };
 
 const usdtToken: AppkitUIToken = {
+    id: 'usdt',
     symbol: 'USDT',
     name: 'Tether USD',
     decimals: 6,
