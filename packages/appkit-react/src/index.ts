@@ -42,5 +42,6 @@ export * from './features/swap';
 export * from './features/signing';
 export * from './features/staking';
 export * from './features/gasless';
+export * from './features/providers';
 
 export * from './types/appkit-ui-token';
